@@ -1,0 +1,71 @@
+﻿@model MPT.Model.Workstation
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Workstation</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.FactoryId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FactoryId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Number)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Number)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Project.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Project.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Username)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Username)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Password)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Password)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.IP)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IP)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Enable)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Enable)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

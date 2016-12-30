@@ -1,0 +1,172 @@
+﻿@using MPT.WorkSchedule
+@using WebMpt
+
+
+@model IEnumerable<ScheduleMonth>
+@{
+    ViewBag.Title = "ScheduleWork";
+}
+<div id="title">График работы (сменности)</div>
+
+@using (Ajax.BeginModalDialogForm())
+{
+    
+    <div @* style="display: none;"*@ id="window-grafic">
+
+    <div id="text">
+        @foreach (var month in Model)
+        {
+            <div class="blueItalicLabel" style="font-weight: bold;" align="center">
+                @Html.DisplayFor(i => month.FullName)                
+            </div>
+            
+            <div align="left">
+                <table class="graficTable" cellspacing="0" border="1">
+                    <thead>
+                        <tr>
+                            <th align="center" rowspan="2">#</th>                            
+                            @foreach(var day in month.Days)
+                            {
+                                <th align="center" bgcolor="@Html.Raw(day[Smena.Day].BgColor)">
+                                    @Html.DisplayFor(i=> day.Day)
+                                </th>
+                            }
+                            <th align="center" rowspan="2">Норма</th>
+                            <th align="center" rowspan="2">Подм.</th>
+                            <th align="center" rowspan="2">Дни</th>
+                            <th align="center" rowspan="2">Часы</th>
+                            <th align="center" rowspan="2">Ночные</th>
+                            <th align="center" rowspan="2">Празд.</th>
+                        </tr>
+                        <tr>
+                             
+                            @foreach (var day in month.Days)
+                            {
+                                <th align="center" bgcolor="@Html.Raw(day[Smena.Day].BgColor)">                                    
+                                    @Html.DisplayFor(x=> day.DayName)
+                                </th>
+                            }
+                             
+                        </tr>
+                    </thead>
+                    
+                    
+                    <tbody>
+                        <tr>
+                            <td>Day</td> 
+                            @foreach (var day in month.Days)
+                            {
+                                <td bgcolor="@Html.Raw(day[Smena.Day].BgColor)">
+                                    @Html.DisplayFor(x=> day[Smena.Day].Hours)
+                                </td>
+                            }
+                            <td>
+                                @Html.DisplayFor(x => month[Smena.Day].WorkTime)
+                            </td>
+                            <td>
+                                &nbsp;
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x=>month[Smena.Day].WorkDays)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(x=>month[Smena.Day].WorkTime)
+                            </td>
+                            <td>
+                                &nbsp;
+                            </td>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        
+                        @foreach (var smena in (Enum.GetValues(typeof(Smena)).OfType<Smena>().Where(x=>x!=Smena.Day).OrderBy(x=>x.ToString())))
+                        {
+                            
+                            <tr>
+                                <td>@Html.Raw(smena)</td>    
+                                @foreach (var day in month.Days)
+                                {
+                                    <td bgcolor="@Html.Raw(day[smena].BgColor)">@Html.DisplayFor(x=> day[smena].Hours)</td>
+                                }   
+                                <td>@Html.DisplayFor(x=> month[Smena.Day].WorkTime)</td>
+                                <td>@Html.DisplayFor(x=> month[smena].OverTime)</td>
+                                <td>@Html.DisplayFor(x=> month[smena].WorkDays)</td>
+                                <td>@Html.DisplayFor(x=> month[smena].WorkTime)</td>
+                                <td>@Html.DisplayFor(x=> month[smena].NightTime)</td>
+                                <td>@Html.DisplayFor(x=> month[smena].HolidayTime)</td>
+
+                            </tr>
+                        }
+                        
+            @*
+                        <tr>
+                            <th>А</th> 
+                            @foreach (var dd in month.Days)
+                            {
+                                <td bgcolor="@Html.Raw(dd.bgColor_A)">@Html.DisplayFor(x=> dd.hour_A)</td>
+                            }
+                            <td>@Html.DisplayFor(x=> month.WorkTimeD)</td>
+                            <td>@Html.DisplayFor(x=> month.OverTimeA)</td>
+                            <td>@Html.DisplayFor(x=> month.WorkDaysA)</td>
+                            <td>@Html.DisplayFor(x=> month.WorkTimeA)</td>
+                            <td>@Html.DisplayFor(x=> month.NightTimeA)</td>
+                            <td>@Html.DisplayFor(x=> month.HolidayTimeA)</td>
+                        </tr>
+
+                        <tr>
+                            <th>Б</th> 
+                            @foreach (var dd in month.Days)
+                            {
+                                <td bgcolor="@Html.Raw(dd.bgColor_B)">@Html.DisplayFor(x=> dd.hour_B)</td>                                                       
+                            }
+                            <td>@Html.DisplayFor(x=> month.WorkTimeD)</td>
+                            <td>@Html.DisplayFor(x=> month.OverTimeB)</td>
+                            <td>@Html.DisplayFor(x=> month.WorkDaysB)</td>
+                            <td>@Html.DisplayFor(x=> month.WorkTimeB)</td>
+                            <td>@Html.DisplayFor(x=> month.NightTimeB)</td>
+                            <td>@Html.DisplayFor(x=> month.HolidayTimeB)</td>
+                        </tr>            
+            
+                        <tr>
+                            <th>В</th> 
+                            @foreach (var dd in month.Days)
+                            {
+                                <td bgcolor="@Html.Raw(dd.bgColor_V)">@Html.DisplayFor(x=> dd.hour_V)</td>                                                       
+                            }
+                            <td>@Html.DisplayFor(x=> month.WorkTimeD)</td>
+                            <td>@Html.DisplayFor(x=> month.OverTimeV)</td>
+                            <td>@Html.DisplayFor(x=> month.WorkDaysV)</td>
+                            <td>@Html.DisplayFor(x=> month.WorkTimeV)</td>
+                            <td>@Html.DisplayFor(x=> month.NightTimeV)</td>
+                            <td>@Html.DisplayFor(x=> month.HolidayTimeV)</td>
+                        </tr>
+            
+                        <tr>
+                            <th>G</th> 
+                            @foreach (var dd in month.Days)
+                            {
+                                <td bgcolor="@Html.Raw(dd.bgColor_G)">@Html.DisplayFor(x=> dd.hour_G)</td>                                                       
+                            }
+                            <td>@Html.DisplayFor(x=> month.WorkTimeD)</td>
+                            <td>@Html.DisplayFor(x=> month.OverTimeG)</td>
+                            <td>@Html.DisplayFor(x=> month.WorkDaysG)</td>
+                            <td>@Html.DisplayFor(x=> month.WorkTimeG)</td>
+                            <td>@Html.DisplayFor(x=> month.NightTimeG)</td>
+                            <td>@Html.DisplayFor(x=> month.HolidayTimeG)</td>
+                        </tr>
+                        *@
+            
+            
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+    <div id="end">
+        <a href="#" class="bot" id="openClose" onclick="return false;">Закрыть</a>
+    </div>
+    </div>
+        
+    
+}

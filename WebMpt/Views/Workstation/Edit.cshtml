@@ -1,0 +1,93 @@
+﻿@model MPT.Model.Workstation
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Workstation</legend>
+
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FactoryId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FactoryId)
+            @Html.ValidationMessageFor(model => model.FactoryId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Number)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Number)
+            @Html.ValidationMessageFor(model => model.Number)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ProjectId, "Project")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("ProjectId", String.Empty)
+            @Html.ValidationMessageFor(model => model.ProjectId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Username)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Username)
+            @Html.ValidationMessageFor(model => model.Username)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Password)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Password)
+            @Html.ValidationMessageFor(model => model.Password)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IP)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IP)
+            @Html.ValidationMessageFor(model => model.IP)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Enable)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Enable)
+            @Html.ValidationMessageFor(model => model.Enable)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.NetworkName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.NetworkName)
+            @Html.ValidationMessageFor(model => model.NetworkName)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

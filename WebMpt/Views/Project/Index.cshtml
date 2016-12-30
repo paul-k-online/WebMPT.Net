@@ -1,0 +1,41 @@
+﻿@model IEnumerable<MPT.Model.ProjectHMI>
+
+@{
+    ViewBag.Title = "Список проектор HMI";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<!--
+<p>
+    @Html.ActionLink("Добавить", "Create")
+</p>
+    -->
+
+<table class="table table-bordered table-striped table-hover table-condensed">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.IDE)</th>
+            <th>@Html.DisplayNameFor(model => model.Description)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var project in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => project.Name)</td>
+                <td>@Html.DisplayFor(modelItem => project.IDE)</td>
+                <td>@Html.DisplayFor(modelItem => project.Description)</td>
+                <td>
+                    
+                        @* @Html.ActionLink("Edit", "Edit", new { id=project.Id }) | *@
+                        @Html.ActionLink("Details", "Details", new { id=project.Id })
+                        @* | @Html.ActionLink("Delete", "Delete", new { id=project.Id }) *@
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

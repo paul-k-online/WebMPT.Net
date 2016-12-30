@@ -1,0 +1,62 @@
+﻿@model IEnumerable<MPT.Model.Workstation>
+@{
+    ViewBag.Title = "Список рабочих станций";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<h3>@Html.ActionLink("Список последних событий всех рабочих станций", "Events")</h3>
+
+<p>
+    @Html.ActionLink("Добавить", "Create")
+</p>
+
+
+<table class="table table-bordered table-hover ">
+    @foreach (var factoryGroupingWs in (Model.GroupBy(ws => ws.Project.Factory).OrderBy(x => x.Key.Number)))
+    {
+        <thead>
+        <tr>
+            <th colspan="5" style="border: 0 none;">
+                <br/>
+                <b> @Html.Encode(factoryGroupingWs.Key.Description) </b>
+            </th>
+        </tr>
+        <tr>
+            <th>Проект</th>
+            <th>Сетевое имя</th>
+            <th>@Html.DisplayNameFor(model => model.IP)</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var projectGroupingWs in factoryGroupingWs.GroupBy(ws => ws.Project).OrderBy(x => x.Key.OrderIndex))
+        {
+            var first = true;
+            var prjCount = projectGroupingWs.Count();
+
+            foreach (var item in projectGroupingWs.OrderBy(x => x.IP))
+            {
+                <tr>
+                    @if (first)
+                    {
+                        <td rowspan="@prjCount">@Html.DisplayFor(modelItem => item.Project.FullName)</td>
+                        first = false;
+                    }
+                    <td>@Html.DisplayFor(modelItem => item.NetworkName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.IP)</td>
+
+                    <td>
+                        <!--
+                        @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
+                        @Html.ActionLink("Details", "Details", new {id = item.Id}) |
+                        @Html.ActionLink("Delete", "Delete", new {id = item.Id})
+                        -->
+                        @Html.ActionLink("События", "Events", new {id = item.Id})
+                    </td>
+                </tr>
+            }
+        }
+        </tbody>
+    }
+</table>

@@ -1,0 +1,209 @@
+﻿@using WebMpt.Model
+@model PlcEventListDTO
+@{
+    ViewBag.Title = string.Format("Протокол событий контроллера \"{0}\"", ViewBag.PlcFullName);
+    ViewBag.Message = ViewBag.PlcFullName;
+
+    ViewBag.LeftContent = ViewBag.Title;
+}
+@section Scripts {
+    @Styles.Render("~/Content/bootstrap-datetimepicker")
+    @Scripts.Render("~/bundles/bootstrap-datetimepicker")
+    <script>
+        function contextTracker() { return false; }
+        document.oncontextmenu = contextTracker;
+    </script>
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Get, new { @id = "SearchForm", @class = "form-horizontal" }))
+{
+    <fieldset>
+        <legend>Фильтр</legend>
+
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Дополнительные опции</a>
+            </h4>
+        </div>
+
+        <div id="collapseOne" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="form-group">
+                    @Html.LabelFor(x => Model.Numbers, new {@class = "col-sm-2 control-label"})
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(x => Model.Numbers, new {@value = Model.Numbers, @class = "form-control", @defaultValue = "", @placeholder = Html.DisplayNameFor(x => Model.Numbers)})
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => Model.Message, new {@class = "col-sm-2 control-label"})
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(x => Model.Message, new {@value = Model.Message, @class = "form-control", @defaultValue="", @placeholder = Html.DisplayNameFor(x => Model.Message)})
+                    </div>
+                </div>
+                <div class="form-group checkbox">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <label>
+                            @Html.CheckBoxFor(m => m.SortOrderDesc, new { @defaultValue = false})
+                            @Html.DisplayNameFor(m => m.SortOrderDesc)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group checkbox">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <label>
+                            @Html.CheckBoxFor(m => m.HideBreak, new { @defaultValue = false})
+                            @Html.DisplayNameFor(m => m.HideBreak)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group checkbox">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <label>
+                            @Html.CheckBoxFor(m => m.ShowGroup, new { @defaultValue = false})
+                            @Html.DisplayNameFor(m => m.ShowGroup)
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(x => Model.DateBegin, new {@class = "col-sm-2 control-label"})
+            <div class="col-sm-4">
+                <div class="input-group date">
+                    <label for="@Html.NameFor(i => i.DateBegin)" class="input-group-addon btn"><span class="glyphicon glyphicon-calendar"></span></label>
+                    <input id="@Html.NameFor(i => i.DateBegin)" name="@Html.NameFor(i => i.DateBegin)" class="form-control" value="@Html.DisplayFor(i => i.DateBegin)" type="text"/>
+                </div>
+            </div>
+
+            @Html.LabelFor(x => Model.DateEnd, new {@class = "col-sm-2 control-label"})
+            <div class="col-sm-4">
+                <div class="input-group date">
+                    <label for="@Html.NameFor(i => i.DateEnd)" class="input-group-addon btn"><span class="glyphicon glyphicon-calendar"></span></label>
+                    <input id="@Html.NameFor(i => i.DateEnd)" name="@Html.NameFor(i => i.DateEnd)" class="form-control" value="@Html.DisplayFor(i => i.DateEnd)" type="text"/>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                $(function () {
+                    $('#@Html.NameFor(i => i.DateEnd)')
+                        .datetimepicker({
+                            locale: 'ru',
+                            format: "YYYY-MM-DD",
+                            showTodayButton: true,
+                            maxDate: moment()
+                            //useCurrent: false //Important! See issue #1075
+                    });
+                    $('#@Html.NameFor(i => i.DateBegin)')
+                        .datetimepicker({
+                            locale: 'ru',
+                            format: "YYYY-MM-DD"
+                            //showTodayButton: true,
+                            //maxDate: $('#@Html.NameFor(i => i.DateEnd)').data("DateTimePicker").viewDate,
+                            //useCurrent: false //Important! See issue #1075
+                    });
+                    var dt = $('#@Html.NameFor(i => i.DateEnd)').data("DateTimePicker").date;
+                    $('#@Html.NameFor(i => i.DateEnd)').on("dp.change", function (e) {
+                        $('#@Html.NameFor(i => i.DateBegin)').data("DateTimePicker").maxDate(e.date);
+                        //var dateBegin = $('#@Html.NameFor(i => i.DateBegin)').data("DateTimePicker").value;
+                        //var dateEnd = $('#@Html.NameFor(i => i.DateEnd)').data("DateTimePicker").value;
+                    });
+                    $('@Html.NameFor(i => i.DateBegin)').on("dp.change", function (e) {
+                        $('#@Html.NameFor(i => i.DateEnd)').data("DateTimePicker").minDate(e.date);
+                    });
+                });
+            </script>
+        </div>
+
+        <div class="form-group-sm form-actions">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" value="" class="btn btn-default"><span class="glyphicon glyphicon-filter"></span> Применить</button>
+                <a href="@Url.Action("Events", routeValues: null)" class="btn btn-default" role="button"><span class="glyphicon glyphicon-erase"></span> Сбросить</a>
+            </div>
+        </div>
+    </fieldset>
+}
+<br/>
+
+<table id="EventsTable" class="table table-bordered table-striped table-hover table-condensed">
+    <thead>
+    <tr>
+        @{ var first = Model.EventList.FirstOrDefault(); }
+        <th> @Html.DisplayNameFor(model => first.Date)</th>
+        <th> @Html.DisplayNameFor(model => first.Time)</th>
+        <th> @Html.DisplayNameFor(model => first.Number)</th>
+        <th> @Html.DisplayNameFor(model => first.Message)</th>
+        <th> @Html.DisplayNameFor(model => first.StringCode)</th>
+        <th> @Html.DisplayNameFor(model => first.StringValue)</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var plcEventDTO in Model.EventList)
+        {
+            var styleClass = "";
+            switch (plcEventDTO.SeverityNumber)
+            {
+                case 1:
+                case 2:
+                    styleClass = "danger";
+                    break;
+                case 3:
+                    styleClass = "warning";
+                    break;
+            }
+
+            <tr class="@styleClass">
+                <td>@Html.DisplayFor(i => plcEventDTO.Date)</td>
+                <td>@Html.DisplayFor(i => plcEventDTO.Time)</td>
+                <td>@Html.DisplayFor(i => plcEventDTO.Number)</td>
+                <td>@Html.DisplayFor(i => plcEventDTO.Message)</td>
+                <td>
+                    @switch (plcEventDTO.Code)
+                    {
+                        case 64:
+                            @Html.Raw("норма")
+                            break;
+                        case 65:
+                            @Html.Raw("нарушение")
+                            break;
+                        default:
+                            @Html.DisplayFor(i => (plcEventDTO.StringCode))
+                            break;
+                    }
+                </td>
+                <td>@Html.DisplayFor(i => (plcEventDTO.StringValue))</td>
+                <!--
+                <td>@Html.DisplayFor(i => (plcEventDTO.Value))</td>
+                -->
+            </tr>
+        }
+    </tbody>
+</table>
+
+@*
+@{
+    const string linkDateFormat = "({0})";
+    var date = Model.DateEnd;
+    var dtToday = date.ToString(PlcEventListDTO.DateFormat);
+    var dtPast = date.AddDays(-1).ToString(PlcEventListDTO.DateFormat);
+
+    if (date.Date < DateTime.Now.Date)
+    {
+        var dtFuture = date.AddDays(1).ToString(PlcEventListDTO.DateFormat);       
+        @Html.ActionLink(string.Format(linkDateFormat, dtFuture), "Events", new { date = dtFuture })
+        @Html.Raw("&nbsp;")@Html.Raw("&nbsp;")
+    }
+
+    @Html.Raw(string.Format(linkDateFormat, dtToday))
+    @Html.Raw("&nbsp;")@Html.Raw("&nbsp;")
+    
+    @Html.ActionLink(string.Format(linkDateFormat, dtPast), "Events", new { date = dtPast })
+}
+<br/>
+@Html.ActionLink("(сегодня)", "Events", routeValues: new { } )
+*@

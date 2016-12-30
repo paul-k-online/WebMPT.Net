@@ -1,0 +1,41 @@
+﻿@model MPT.Model.ProjectHMI
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>Project</legend>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.Name)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.Name)</div>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.Path)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.Path)</div>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.Version)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.Version)</div>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.IDE)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.IDE)</div>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.Description)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.Description)</div>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.DateCreate)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.DateCreate)</div>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.DateEdit)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.DateEdit)</div>
+
+</fieldset>
+
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

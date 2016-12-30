@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - WebMpt.Net</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+    
+        @Scripts.Render("~/bundles/modernizr")                
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryui")
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/Scripts/modaldialog.js")
+        
+        @Styles.Render("~/Content/css")
+        @Styles.Render("~/Content/themes/base/jquery.ui.all.css")
+        @Styles.Render("~/Content/themes/base/jquery.ui.dialog.css")
+
+        @RenderSection("scripts", false)
+    </head>
+
+    <body>
+        <header>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <p class="site-title">@Html.ActionLink("Портал сектора МПТ", "Index", "Home")</p>
+                </div>
+                <div class="float-right">
+                    
+                    <section id="login">
+                        @Html.Partial("_LoginPartial")
+                    </section>
+                    
+                    <nav>
+                        <ul id="menu">
+                            <li>@Html.ActionLink("Главная", "Index", "Home")</li>
+                            <li>@Html.ActionLink("Контроллеры", "Index", "Plc")</li>
+                            <li>@Html.ActionLink("Проекты", "Index", "Project")</li>
+                            <li>@Html.ActionLink("Рабочие станции", "Index", "Workstation")</li>
+                            <li>@Html.ActionLink("События станций", "Index", "PcEvent")</li>
+                            <li>@Html.ActionLink("О секторе", "About", "Home")</li>          
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        <div id="body">
+            @RenderSection("featured", required: false)
+            <section class="content-wrapper main-content clear-fix">
+                
+                @RenderBody()
+            
+            </section>
+        </div>
+        <footer>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <p>&copy; @DateTime.Now.Year - MPT</p>
+                </div>
+            </div>
+        </footer>
+        
+
+    </body>
+</html>

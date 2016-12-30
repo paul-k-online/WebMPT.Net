@@ -1,0 +1,146 @@
+﻿@using System.Globalization
+@using WebMpt.Controllers
+@using WebMpt.Model
+@*
+    @model WebMpt.PagedList<WebMpt.Model.PlcEventDTO>
+*@
+@model IEnumerable<WebMpt.Model.PlcEventOldDTO>
+@{
+
+    ViewBag.Title = "Протокол событий контроллера" + ViewBag.PlcFullName;
+    ViewBag.Message = ViewBag.PlcFullName;
+    
+}
+
+<script type="text/javascript">
+    function contextTracker() {
+        return false;
+    }
+    document.oncontextmenu = false;
+</script>
+<H1>@Html.Raw(ViewBag.PlcDescr)</H1>
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Фильтр</legend>
+        <table>
+            <tr>
+                <td>@Html.Label("searchMessageNumber", "Номер:")</td>
+                <td>@Html.TextBox("searchMessageNumber")</td>
+            </tr>
+            <tr>
+                <td>@Html.Label("searchReason", "Сообщение:")</td>
+                <td>@Html.TextBox("searchReason")</td>
+            </tr>
+            <tr>
+                <td colspan="2">@Html.CheckBox("hideBreak", false) @Html.Label("hideBreak", "Спрятать сообщения об обрывах")</td>
+            </tr>
+        </table>
+        <input type="submit" value="Найти"/>
+    </fieldset>
+}
+
+<table class="table table-bordered table-striped table-hover table-condensed">
+    <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Время</th>
+            <th>Номер</th>
+            <th>Сообщение</th>
+            <th>Причина</th>
+            <th>Значение</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var s = ((PlcEventDTO.SeverityString)item.SeverityNumber).ToString();
+            var bootstrapContextual = "";
+            switch (item.SeverityNumber)
+            {
+                
+  
+            }
+            
+            <tr class="@s">
+                <td> @item.DateTime.ToString("yyyy-MM-dd")</td>
+                <td> @item.DateTime.ToString("HH:mm:ss.fff") </td>
+                <td> @Html.DisplayFor(i => item.Number) </td>
+                <td>
+                    @Html.DisplayFor(i => item.Message)
+                    @if (item.Message == null)
+                    {
+                        @Html.Raw("")
+                    }
+                </td>
+                <td>
+                    @if (item.IsDigit)
+                    {
+                        switch (item.Code)
+                        {
+                            case 65:
+                                @Html.Raw("нарушение")
+                                break;
+                            case 64:
+                            @Html.Raw("норма")
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(i => item.Reason)
+                        if (item.Reason == null)
+                        {
+                            @Html.Raw("&nbsp;")
+                        }
+                    }
+                </td>
+
+                <td>
+                    @if (item.IsDigit)
+                    {
+                        //var digit = Convert.ToInt16(item.Value);
+                        //digit.ToString(CultureInfo.GetCultureInfo("ru"))
+                        @Html.Raw("&nbsp;")
+                    }
+                    else if (Math.Abs(item.Value) == 0)
+                    {
+                        @Html.Encode(" ")
+                    }
+                    else
+                    {
+                        var exp = Math.Floor(Math.Log10(Math.Abs(item.Value)));
+                        @(exp > 0 ? item.Value.ToString("F1", CultureInfo.InvariantCulture) : item.Value.ToString("F3", CultureInfo.InvariantCulture))
+
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@*
+@Html.PagedListPager(
+    Model, 
+    pageNumber => Url.Action("Events", new { page = pageNumber }),   
+    PagedListRenderOptions.ClassicPlusFirstAndLast)
+*@
+
+@{
+    var date = (DateTime)ViewBag.StartDate;
+    if (date.Date < DateTime.Now.Date)
+    {
+        var dtPrev = date.AddDays(1).ToString(PlcController.DateFormat);       
+        @Html.ActionLink(string.Format(" ({0}) ", dtPrev), "Events", new { date = dtPrev })
+    }
+
+    var dtCur = date.ToString(PlcController.DateFormat);
+    @Html.Raw(string.Format(" ({0}) ", dtCur))
+    var dtNext = date.AddDays(-1).ToString(PlcController.DateFormat);
+    @Html.ActionLink(string.Format(" ({0}) ", dtNext), "Events", new { date = dtNext })
+}
+
+<br/>
+@Html.ActionLink("(к сегодня)", "Events")

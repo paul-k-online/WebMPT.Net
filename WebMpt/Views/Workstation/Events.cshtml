@@ -1,0 +1,42 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model IPagedList<MPT.Model.PcEvent>
+
+@{ 
+    ViewBag.Title = string.Format("События рабочей станции \"{0}\"", ViewBag.wsName);
+}
+<h1>@ViewBag.Title</h1>
+
+
+@*
+    @using (Html.BeginForm())
+    {
+        <fieldset>
+            <legend>Фильтр событий</legend>
+            @Html.CheckBox("showIgnoredEvent", new {onclick="this.form.submit();"})
+            @Html.TextBox("showIgnoredEvent")
+        </fieldset>
+    }
+*@
+
+<table class="table table-bordered table-striped table-hover table-condensed">
+    <thead>
+    <tr>
+        <th>Время</th>
+        <th>Сообщение</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td> @Html.DisplayFor(modelItem => item.DateTime) </td>
+                <td> @Html.DisplayFor(modelItem => item.Message) </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@Html.PagedListPager( Model, page => Url.Action("Events", new { page }), PagedListRenderOptions.Minimal)

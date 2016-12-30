@@ -1,0 +1,87 @@
+﻿@model IEnumerable<WebMpt.Model.PlcDTO>
+@{
+    ViewBag.Title = "Список контроллеров";
+    ViewBag.LeftContent = ViewBag.Title;
+    //ViewBag.RightContent = ;
+
+}
+
+@DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+<br/>
+
+@*
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+*@
+
+@Html.ActionLink("Добавить новый", "Create")
+<br/>
+
+<table class="table table-bordered table-striped table-hover table-condensed">
+@foreach (var group in Model.GroupBy(plc => plc.Factory).OrderBy(x => x.Key.Number))
+{
+    <thead>
+    <tr>
+        <th colspan="5"><b> @Html.DisplayFor(i => group.Key.FullName) </b></th>
+    </tr>
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Name)</th>
+        <th>@Html.DisplayNameFor(model => model.Description)</th>
+        <th>@Html.DisplayNameFor(model => model.TodayCount)</th>
+        <th>@Html.DisplayNameFor(model => model.LastEventDateTime)</th>
+        <th> </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    @foreach (var plc in group.OrderBy(p => p.OrderIndex))
+    {
+        <tr>
+            <td>@Html.DisplayFor(i => plc.Name)</td>
+            <td>@Html.DisplayFor(i => plc.Description)</td>
+            <td style="text-align:center; @Html.Raw(plc.HasWarningToday ? "color:red":"") "> @Html.DisplayFor(i => plc.TodayCount)</td>
+            <td>
+                @if (plc.LastEventDateTime != null)
+                {
+                    var dt = plc.LastEventDateTime.Value;
+                    var timeFormat = "yyyy-MM-dd, HH:mm";
+                    if (dt.Date == DateTime.Now.Date)
+                    {
+                        timeFormat = "HH:mm";
+                    }
+                    else if (dt.Date == DateTime.Now.Date.AddDays(-1))
+                    {
+                        timeFormat = "вчера, HH:mm";
+                    }
+                    else if (dt.Date == DateTime.Now.Date.AddDays(-2))
+                    {
+                        timeFormat = "позавчера, HH:mm";
+                    }
+                    @Html.Raw(dt.ToString(timeFormat))
+                }
+                else
+                {
+                    @Html.Raw("&npsb");
+                }
+            </td>
+            <td>
+                @if (plc.ProtocolType == 1 || plc.ProtocolType == 2)
+                {
+                    @Html.ActionLink("Протокол событий", "Events", new {id = plc.Id})
+                    if (plc.ProtocolType == 1)
+                    {
+                        @Html.Raw(" | ")
+                        @Html.ActionLink("Список сообщение", "Messages", new {id = plc.Id})
+                    }                    
+                }
+                else
+                {
+                    Html.Raw("&nbsp");
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+}
+</table>

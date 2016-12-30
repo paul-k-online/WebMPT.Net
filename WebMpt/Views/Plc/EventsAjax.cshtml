@@ -1,0 +1,45 @@
+﻿@Scripts.Render("~/bundles/jquery/jtable")
+@Styles.Render("~/bundles/jquery/jtable/Theme")
+@{
+    ViewBag.Title = "list";
+}
+
+<h2>Events2</h2>
+<div id="EventsTableContainer"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#EventsTableContainer').jtable({
+        title: 'Таблица сообщений',
+        actions: {
+            listAction: '/Plc/EventList'
+        },
+        fields: {
+            Id: {
+                key: true,
+                list: false
+            },
+            DateTime: {
+                title: 'Дата',
+                type: 'DateTime',
+                width: '20%'
+            },
+            MessageText: {
+                title: 'Сообщение',
+                width: '40%'
+            },
+            Reason: {
+                title: 'Причина',
+                width: '40%'
+            },
+            Value: {
+                title: 'Значение',
+                width: '10%'
+            }
+        }
+    });
+    //Load person list from server
+    $('#EventsTableContainer').jtable('load');
+});
+</script>
+    

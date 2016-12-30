@@ -1,0 +1,36 @@
+﻿@model MPT.Model.ProjectHMI
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Project</legend>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.Name)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.Name)</div>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.Path)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.Path)</div>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.Version)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.Version)</div>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.IDE)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.IDE)</div>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.Description)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.Description)</div>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.CreateDate)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.CreateDate)</div>
+
+    <div class="display-label">@Html.DisplayNameFor(model => model.EditDate)</div>
+    <div class="display-field">@Html.DisplayFor(model => model.EditDate)</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

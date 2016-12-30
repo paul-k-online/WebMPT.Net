@@ -1,0 +1,74 @@
+﻿@using MPT.Model
+@model IDictionary<int, Tuple<PlcMessage, PlcMessage>>
+@{
+    ViewBag.Title = string.Format("Загрузка сообщений для контроллера \"{0}\"", ViewBag.PlcFullName);
+}
+
+@{ var plcId = (int) ViewBag.PlcId; }
+
+
+@{
+    if (!Model.Any())
+    {
+        <h1>Все сообщения совпадают для контроллера "@ViewBag.PlcFullName"</h1>
+        @Html.ActionLink("Возврат", "Messages", new {id = plcId})
+        return;
+    }
+}
+
+<h1>@ViewBag.Title</h1>
+
+
+
+
+
+
+@using(Html.BeginForm("MessagesUpdateApply","Plc", FormMethod.Post, new {@class = ""}))
+{
+    <fieldset>
+        <legend></legend>
+        @Html.Hidden("plcId", plcId)
+    </fieldset>
+    
+    <div class="form-group form-actions">
+        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Применить</button>
+        <button type="button" class="btn btn-default" onclick="location.href = '@Url.Action("Messages", new {@id = plcId})'"><span class="glyphicon glyphicon-block"></span> Отмена</button>
+    </div>
+}
+<br/>
+
+
+<table class="table table-bordered table-condensed">
+    
+    <thead>
+    <tr>
+        @{var firstPair = Model.FirstOrDefault();
+          var message = firstPair.Value.Item1 ?? firstPair.Value.Item2;
+        }
+        <th>@Html.DisplayNameFor(model => message.Number)</th>
+        <th>@Html.DisplayNameFor(model => message.Text)</th>
+        <th>@Html.DisplayNameFor(model => message.Group)</th>
+        <th>@Html.DisplayNameFor(model => message.Severity)</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    @foreach (var valuePair in Model)
+    {
+        <tr>
+            <td rowspan="2">@* bgcolor=" @Html.Raw(match? "green":"red") " *@ 
+                @Html.DisplayFor(i => valuePair.Key)
+            </td>
+            <td>@Html.DisplayFor(i => valuePair.Value.Item1.Text)</td>
+            <td>@Html.DisplayFor(i => valuePair.Value.Item1.Group)</td>
+            <td>@Html.DisplayFor(i => valuePair.Value.Item1.Severity)</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayFor(i => valuePair.Value.Item2.Text)</td>
+            <td>@Html.DisplayFor(i => valuePair.Value.Item2.Group)</td>
+            <td>@Html.DisplayFor(i => valuePair.Value.Item2.Severity)</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
