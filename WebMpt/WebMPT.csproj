@@ -359,12 +359,9 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <Content Include="Views\Plc\Events.cshtml">
-      <SubType>Code</SubType>
-    </Content>
+    <Content Include="Views\Plc\Events.cshtml" />
     <Content Include="Views\RsView\Index.cshtml" />
     <Content Include="Views\RsView\GenerateImportTags.cshtml" />
-    <None Include="Views\RsView\GenerateTags.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
