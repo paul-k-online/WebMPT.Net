@@ -25,7 +25,7 @@
         <tr>
             <th>Проект</th>
             <th>Сетевое имя</th>
-            <th>@Html.DisplayNameFor(model => model.IP)</th>
+            <th>@Html.DisplayNameFor(model => model.Address)</th>
             <th></th>
         </tr>
         </thead>
@@ -35,7 +35,7 @@
             var first = true;
             var prjCount = projectGroupingWs.Count();
 
-            foreach (var item in projectGroupingWs.OrderBy(x => x.IP))
+            foreach (var item in projectGroupingWs.OrderBy(x => x.Address))
             {
                 <tr>
                     @if (first)
@@ -44,7 +44,7 @@
                         first = false;
                     }
                     <td>@Html.DisplayFor(modelItem => item.NetworkName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.IP)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Address)</td>
 
                     <td>
                         <!--
