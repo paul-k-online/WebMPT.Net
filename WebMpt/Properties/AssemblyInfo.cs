@@ -11,7 +11,7 @@ using System.Resources;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Polymir")]
 [assembly: AssemblyProduct("WebMpt")]
-[assembly: AssemblyCopyright("Copyright © MPT 2014")]
+[assembly: AssemblyCopyright("Copyright © MPT 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

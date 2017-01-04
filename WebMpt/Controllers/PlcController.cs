@@ -81,7 +81,7 @@ namespace WebMpt.Controllers
             
             if (plc.ProtocolType == 1)
             {
-                var events = _db.GetEventsByPlc(plc);
+                var events = _db.GetEventsByPlc(plc.Id);
                 events = events.Where(x => x.DateTime >= filterDateFrom  &&  x.DateTime < filterDateTo);
 
                 if (!string.IsNullOrEmpty(plcEventListDTO.Numbers))

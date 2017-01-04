@@ -1,11 +1,13 @@
 ﻿@using WebMpt.Model
 @model PlcEventListDTO
+
 @{
     ViewBag.Title = string.Format("Протокол событий контроллера \"{0}\"", ViewBag.PlcFullName);
     ViewBag.Message = ViewBag.PlcFullName;
 
     ViewBag.LeftContent = ViewBag.Title;
 }
+
 @section Scripts {
     @Styles.Render("~/Content/bootstrap-datetimepicker")
     @Scripts.Render("~/bundles/bootstrap-datetimepicker")
@@ -72,50 +74,86 @@
 
 
         <div class="form-group">
-            @Html.LabelFor(x => Model.DateBegin, new {@class = "col-sm-2 control-label"})
-            <div class="col-sm-4">
-                <div class="input-group date">
-                    <label for="@Html.NameFor(i => i.DateBegin)" class="input-group-addon btn"><span class="glyphicon glyphicon-calendar"></span></label>
-                    <input id="@Html.NameFor(i => i.DateBegin)" name="@Html.NameFor(i => i.DateBegin)" class="form-control" value="@Html.DisplayFor(i => i.DateBegin)" type="text"/>
-                </div>
-            </div>
 
-            @Html.LabelFor(x => Model.DateEnd, new {@class = "col-sm-2 control-label"})
-            <div class="col-sm-4">
-                <div class="input-group date">
-                    <label for="@Html.NameFor(i => i.DateEnd)" class="input-group-addon btn"><span class="glyphicon glyphicon-calendar"></span></label>
-                    <input id="@Html.NameFor(i => i.DateEnd)" name="@Html.NameFor(i => i.DateEnd)" class="form-control" value="@Html.DisplayFor(i => i.DateEnd)" type="text"/>
+                @Html.LabelFor(x => Model.DateBegin, new {@class = "col-sm-2 control-label"})
+                <div class="col-sm-3">
+                    <div class="input-group date">
+                        <label for="@Html.NameFor(i => i.DateBegin)" class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"/>
+                        </label>
+                        <input id="@Html.NameFor(i => i.DateBegin)"
+                               name="@Html.NameFor(i => i.DateBegin)"
+                               value="@Html.DisplayFor(i => i.DateBegin)"
+                               class="form-control" type="text"/>
+                    </div>
                 </div>
-            </div>
 
+                @Html.LabelFor(x => Model.DateEnd, new {@class = "col-sm-2 control-label"})
+                <div class="col-sm-3">
+                    <div class="input-group date">
+                        <label for="@Html.NameFor(i => i.DateEnd)" class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"/>
+                        </label>
+                        <input id="@Html.NameFor(i => i.DateEnd)"
+                               name="@Html.NameFor(i => i.DateEnd)"
+                               value="@Html.DisplayFor(i => i.DateEnd)"
+                               class="form-control" type="text"/>
+                    </div>
+                </div>
+@*
+    <div class="input-group input-daterange">
+        <span class="input-group-addon">От</span>
+        <input type="text" class="form-control"
+               id="@Html.NameFor(i => i.DateBegin)"
+               value="@Html.DisplayFor(i => i.DateBegin)">
+        <span class="input-group-addon">До</span>
+        <input type="text" class="form-control"
+               id="@Html.NameFor(i => i.DateEnd)"
+               value="@Html.DisplayFor(i => i.DateEnd)">
+    </div>
+*@
+            
             <script type="text/javascript">
+                @*
+                $('#@Html.NameFor(i => i.DateBegin)').datepicker();
+                $('#@Html.NameFor(i => i.DateBegin)').on("changeDate", function() {
+                    $('#my_hidden_input').val(
+                        $('#datepicker').datepicker('getFormattedDate')
+                    );
+
+                $('.input-daterange input').each(function () {
+                    $(this).datepicker();
+                    format
+                });
+                *@
                 $(function () {
-                    $('#@Html.NameFor(i => i.DateEnd)')
-                        .datetimepicker({
-                            locale: 'ru',
-                            format: "YYYY-MM-DD",
-                            showTodayButton: true,
-                            maxDate: moment()
-                            //useCurrent: false //Important! See issue #1075
-                    });
                     $('#@Html.NameFor(i => i.DateBegin)')
                         .datetimepicker({
                             locale: 'ru',
-                            format: "YYYY-MM-DD"
+                            format: "YYYY-MM-DD",
                             //showTodayButton: true,
+                            maxDate: moment(),
                             //maxDate: $('#@Html.NameFor(i => i.DateEnd)').data("DateTimePicker").viewDate,
                             //useCurrent: false //Important! See issue #1075
+                        });
+
+                    $('#@Html.NameFor(i => i.DateEnd)')
+                    .datetimepicker({
+                            locale: 'ru',
+                            format: "YYYY-MM-DD",
+                            showTodayButton: true,
+                            maxDate: moment(),
+                            //useCurrent: false //Important! See issue #1075
                     });
-                    var dt = $('#@Html.NameFor(i => i.DateEnd)').data("DateTimePicker").date;
+
                     $('#@Html.NameFor(i => i.DateEnd)').on("dp.change", function (e) {
                         $('#@Html.NameFor(i => i.DateBegin)').data("DateTimePicker").maxDate(e.date);
-                        //var dateBegin = $('#@Html.NameFor(i => i.DateBegin)').data("DateTimePicker").value;
-                        //var dateEnd = $('#@Html.NameFor(i => i.DateEnd)').data("DateTimePicker").value;
                     });
                     $('@Html.NameFor(i => i.DateBegin)').on("dp.change", function (e) {
                         $('#@Html.NameFor(i => i.DateEnd)').data("DateTimePicker").minDate(e.date);
                     });
                 });
+                
             </script>
         </div>
 

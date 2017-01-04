@@ -5,7 +5,6 @@ using System.Web.Optimization;
 
 namespace WebMpt
 {
-
     internal class AsIsBundleOrderer : IBundleOrderer
     {
         public virtual IEnumerable<BundleFile> OrderFiles(BundleContext context, IEnumerable<BundleFile> files)
@@ -42,6 +41,7 @@ namespace WebMpt
                 .Include("~/Scripts/modernizr-{version}.js")
                 );
 
+
             bundles.Add(new ScriptBundle("~/bundles/bootstrap")
                 .Include("~/Scripts/bootstrap.*")
                 .ForceOrdered());
@@ -49,28 +49,24 @@ namespace WebMpt
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-datetimepicker")
                 .Include("~/Scripts/moment-with-locales.*")
                 .Include("~/Scripts/bootstrap-datetimepicker.*")
+                .Include("~/Scripts/bootstrap-datepicker.*")
                 .ForceOrdered());
-
-
+            
             
             bundles.Add(new StyleBundle("~/Content/css")
-                                .Include("~/Content/bootstrap.*")
-                                .Include("~/Content/site.css")
-                                );
+                .Include("~/Content/bootstrap.*")
+                .Include("~/Content/site.css")
+                );
 
 
             bundles.Add(new StyleBundle("~/Content/bootstrap-datetimepicker")
                 .Include("~/Content/bootstrap-datetimepicker.*")
+                .Include("~/Content/bootstrap-datepicker.*")
                 );
 
-/*
-#if !DEBUG
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
-                 BundleTable.EnableOptimizations = true;
-#endif
-            */
-
+            BundleTable.EnableOptimizations = true;
         }
     }
 }

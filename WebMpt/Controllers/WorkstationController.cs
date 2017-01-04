@@ -40,7 +40,7 @@ namespace WebMpt.Controllers
             var ws = db.GetWorkstation(id.Value);
 
             ViewBag.wsName = ws.NetworkName.ToUpper();
-            ViewBag.wsIP = ws.IP;
+            ViewBag.wsIP = ws.Address;
 
             var pcEvents = db.GetPcEvents(wsID: id, hideIgnored: hideIgnored)
                 .OrderByDescending(e => e.DateTime)
