@@ -44,8 +44,8 @@ namespace WebMpt.Controllers
 
             var years = sheduleMonthDates.Select(x => x.Year).Distinct();
 
-            HashSet<DateTime> holidays = null;
-            HashSet<DateTime> overWorkdays = null;
+            IEnumerable<DateTime> holidays = null;
+            IEnumerable<WorkScheduleMove> overWorkdays = null;
 
             using (var db = new MPTEntities())
             {

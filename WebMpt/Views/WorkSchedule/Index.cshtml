@@ -1,4 +1,4 @@
-﻿@using MPT.PrimitiveType;
+﻿@using MPT.PrimitiveType
 @using WebMpt.Model.WorkSchedule
 @model IEnumerable<ScheduleMonth>
 
@@ -20,63 +20,56 @@
 }
 *@
 
-<div id="window-grafic">
-    @foreach (var month in Model)
-    {
-        <table id="ScheduleMonth" class="table table-sm table-bordered table-condensed">
-            <thead>
-            <tr>
-                <th style="@if (month.FirstDay.Year == DateTime.Now.Year && month.FirstDay.Month == DateTime.Now.Month) { @Html.Raw("font-size:160%;"); } " 
-                        colspan="@Html.Raw(month.Days.Count() + 7)">@Html.DisplayFor(i => month.FullName)</th>
-            </tr>
-            <tr>
-                <th rowspan="2">#</th>
-                @foreach (var day in month.Days)
-                {
-                    <th class="@day[SmenaName.Day].GetCssClass()">@Html.DisplayFor(i => day.Day)</th>
-                }
-                <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.WorkDayCount)</th>
-                <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.TotalHours)</th>
-                <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.OverHours)</th>
-                <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.NightHours)</th>
-                <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.HolidayHours)</th>
-            </tr>
-            <tr>
-                @foreach (var day in month.Days)
-                {
-                    <th class="@day[SmenaName.Day].GetCssClass()">@Html.DisplayFor(x => day.DayName)</th>
-                }
-            </tr>
-            </thead>
 
-
-            <tbody>
-            @foreach(var smena in month.SmenaMonthPropertieses.Keys)
+@foreach (var month in Model)
+{
+    <table id="ScheduleMonth" class="table table-sm table-bordered table-condensed">
+        <thead>
+        <tr>
+            <th style="
+                @if (month.FirstDay.Year == DateTime.Now.Year && month.FirstDay.Month == DateTime.Now.Month)
+                {
+                    @Html.Raw("font-size:200%;");
+                }" 
+                colspan="@Html.Raw(month.Days.Count() + 7)">@Html.DisplayFor(i => month.FullName)</th>
+        </tr>
+        <tr>
+            <th rowspan="2">#</th>
+            @foreach (var day in month.Days)
             {
-                <tr>
-                    <td>@Html.Raw(smena.GetDescription())</td>
-                    @foreach (var day in month.Days)
-                    {
-                        <td class="@day[smena].GetCssClass()">@Html.DisplayFor(x => day[smena].WorkHours)</td>
-                    }
-                    <td>@Html.DisplayFor(x => month[smena].WorkDayCount)</td>
-                    <td>@Html.DisplayFor(x => month[smena].TotalHours)</td>
-                    <td>@Html.DisplayFor(x => month[smena].OverHours)</td>
-                    <td>@Html.DisplayFor(x => month[smena].NightHours)</td>
-                    <td>@Html.DisplayFor(x => month[smena].HolidayHours)</td>
-                </tr>
+                <th class="@day[SmenaName.Day].GetCssClass()">@Html.DisplayFor(i => day.Day)</th>
             }
-            </tbody>
-        </table>
-    }
-</div>
-  
+            <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.WorkDayCount)</th>
+            <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.TotalHours)</th>
+            <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.OverHours)</th>
+            <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.NightHours)</th>
+            <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.HolidayHours)</th>
+        </tr>
+        <tr>
+            @foreach (var day in month.Days)
+            {
+                <th class="@day[SmenaName.Day].GetCssClass()">@Html.DisplayFor(x => day.DayName)</th>
+            }
+        </tr>
+        </thead>
 
 
-
-
-
-
-
-
-
+        <tbody>
+        @foreach (var smena in month.SmenaMonthPropertieses.Keys)
+        {
+            <tr>
+                <td class="SmenaName">@Html.Raw(smena.GetDescription())</td>
+                @foreach (var day in month.Days)
+                {
+                    <td class="@day[smena].GetCssClass()">@Html.DisplayFor(x => day[smena].WorkHours)</td>
+                }
+                <td>@Html.DisplayFor(x => month[smena].WorkDayCount)</td>
+                <td>@Html.DisplayFor(x => month[smena].TotalHours)</td>
+                <td>@Html.DisplayFor(x => month[smena].OverHours)</td>
+                <td>@Html.DisplayFor(x => month[smena].NightHours)</td>
+                <td>@Html.DisplayFor(x => month[smena].HolidayHours)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

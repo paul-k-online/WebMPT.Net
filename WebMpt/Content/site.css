@@ -142,19 +142,42 @@ ul#menu {
 
 #ScheduleMonth {
     text-align: center;
+    color:black;
+    background-color: white;
 }
+
+#ScheduleMonth .SmenaName{
+    font-weight: bold;   
+}
+
+#ScheduleMonth  .IsPreHoliday {
+    color:green;
+}
+
 #ScheduleMonth  .IsRestday {
-    background-color:red;
+    color:darkred;
+    background: #FFF0F0;
 }
-#ScheduleMonth  .IsHolyday {
+
+#ScheduleMonth  .IsHoliday {
     color:red;
+    font-weight: bold;
+    background-color: #FFF0F0;
 }
-#ScheduleMonth  .IsPreHolyday {
-    color: darkorange;
+
+#ScheduleMonth  .Smena {
+    color:black;
+    background-color: white;
 }
-#ScheduleMonth  .IsNight {
+
+#ScheduleMonth .IsNight {
     background-color: lightgray;
 }
+/*
+#ScheduleMonth .Smena.IsHoliday {
+    color: red;
+}
+    */
 
 
 
