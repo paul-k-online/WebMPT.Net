@@ -3,11 +3,7 @@
     ViewBag.Title = "Список контроллеров";
     ViewBag.LeftContent = ViewBag.Title;
     //ViewBag.RightContent = ;
-
 }
-
-@DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-<br/>
 
 @*
 <hgroup class="title">
@@ -19,18 +15,18 @@
 <br/>
 
 <table class="table table-bordered table-striped table-hover table-condensed">
-@foreach (var group in Model.GroupBy(plc => plc.Factory).OrderBy(x => x.Key.Number))
+@foreach (var group in Model.GroupBy(plc => plc.FactoryNumber).OrderBy(x => x.Key))
 {
     <thead>
     <tr>
-        <th colspan="5"><b> @Html.DisplayFor(i => group.Key.FullName) </b></th>
+        <th colspan="5"><b>@Html.DisplayFor(i => group.First().FactoryFullName)</b></th>
     </tr>
     <tr>
         <th>@Html.DisplayNameFor(model => model.Name)</th>
         <th>@Html.DisplayNameFor(model => model.Description)</th>
-        <th>@Html.DisplayNameFor(model => model.TodayCount)</th>
+        <th>@Html.DisplayNameFor(model => model.EventCount)</th>
         <th>@Html.DisplayNameFor(model => model.LastEventDateTime)</th>
-        <th> </th>
+        <th></th>
     </tr>
     </thead>
 
@@ -40,7 +36,7 @@
         <tr>
             <td>@Html.DisplayFor(i => plc.Name)</td>
             <td>@Html.DisplayFor(i => plc.Description)</td>
-            <td style="text-align:center; @Html.Raw(plc.HasWarningToday ? "color:red":"") "> @Html.DisplayFor(i => plc.TodayCount)</td>
+            <td style="text-align:center; @Html.Raw(plc.HasAlarm ? "color:red":"") "> @Html.DisplayFor(i => plc.EventCount)</td>
             <td>
                 @if (plc.LastEventDateTime != null)
                 {
@@ -48,36 +44,25 @@
                     var timeFormat = "yyyy-MM-dd, HH:mm";
                     if (dt.Date == DateTime.Now.Date)
                     {
-                        timeFormat = "HH:mm";
+                        timeFormat = "сегодня, HH:mm";
                     }
                     else if (dt.Date == DateTime.Now.Date.AddDays(-1))
                     {
                         timeFormat = "вчера, HH:mm";
                     }
-                    else if (dt.Date == DateTime.Now.Date.AddDays(-2))
-                    {
-                        timeFormat = "позавчера, HH:mm";
-                    }
                     @Html.Raw(dt.ToString(timeFormat))
-                }
-                else
-                {
-                    @Html.Raw("&npsb");
                 }
             </td>
             <td>
                 @if (plc.ProtocolType == 1 || plc.ProtocolType == 2)
                 {
-                    @Html.ActionLink("Протокол событий", "Events", new {id = plc.Id})
+                    @*new { target = "_blank" }*@
+                    @Html.ActionLink("Протокол", "Events", new {id = plc.Name} )
                     if (plc.ProtocolType == 1)
                     {
-                        @Html.Raw(" | ")
-                        @Html.ActionLink("Список сообщение", "Messages", new {id = plc.Id})
+                        @Html.Raw("  |  ")
+                        @Html.ActionLink("Сообщения", "Messages", new {id = plc.Id})
                     }                    
-                }
-                else
-                {
-                    Html.Raw("&nbsp");
                 }
             </td>
         </tr>
