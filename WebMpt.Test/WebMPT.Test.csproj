@@ -96,10 +96,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Model\StringToIntListTests.cs" />
-    <Compile Include="MPTEntitiesExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PlcDTOUnitTest.cs" />
     <Compile Include="WorkScheduleTest.cs" />
   </ItemGroup>
   <ItemGroup>

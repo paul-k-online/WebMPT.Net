@@ -1,7 +1,7 @@
 ﻿@Scripts.Render("~/bundles/jquery/jtable")
 @Styles.Render("~/bundles/jquery/jtable/Theme")
 @{
-    ViewBag.Title = "list";
+    ViewBag.Title = string.Format("Протокол событий: \"{0}\"", ViewBag.PlcFullName);
 }
 
 <h2>Events2</h2>

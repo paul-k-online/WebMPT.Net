@@ -8,7 +8,7 @@
 <h2>@ViewBag.Title</h2>
 
 <p>
-    @using(Html.BeginForm("GenerateTags","RsView", FormMethod.Post, new { enctype = "multipart/form-data" })) 
+    @using(Html.BeginForm("RsViewTagsGenerate", "Plc", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         <p>Выберите файл "Перечень позиций контроллера"</p>@Html.TextBox("excelFile", null, new { type = "file" })
         <p>Укажите точку подключения (Node)</p>@Html.TextBox("nodeName")    
