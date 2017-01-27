@@ -20,6 +20,11 @@
 }
 *@
 
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 
 @foreach (var month in Model)
 {
@@ -37,13 +42,24 @@
             <th rowspan="2">#</th>
             @foreach (var day in month.Days)
             {
-                <th class="@day[SmenaName.Day].GetCssClass()">@Html.DisplayFor(i => day.Day)</th>
+                <th 
+                    
+                        
+
+                        class="@day[SmenaName.Day].GetCssClass()">
+                    <div @if (!string.IsNullOrWhiteSpace(day.ToolTip))
+                                        {
+                            @Html.Raw("data-toggle=\"tooltip\" data-placement=\"auto\" title = \"" + day.ToolTip + "\"")
+                        }>
+                        @Html.DisplayFor(i => day.Day)
+                    </div>
+                </th>
             }
-            <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.WorkDayCount)</th>
-            <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.TotalHours)</th>
-            <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.OverHours)</th>
-            <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.NightHours)</th>
-            <th class="rotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.HolidayHours)</th>
+            <th class="RotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.WorkDayCount)</th>
+            <th class="RotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.TotalHours)</th>
+            <th class="RotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.OverHours)</th>
+            <th class="RotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.NightHours)</th>
+            <th class="RotateText" rowspan="2">@Html.DisplayNameFor(m => m.FirstOrDefault().SmenaMonthPropertieses.FirstOrDefault().Value.HolidayHours)</th>
         </tr>
         <tr>
             @foreach (var day in month.Days)
