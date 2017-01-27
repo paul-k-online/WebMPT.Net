@@ -1,10 +1,10 @@
 ﻿@model MPT.Model.PLC
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Редактировать";
 }
 
-<h2>Edit</h2>
+<h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
@@ -14,33 +14,25 @@
 
         @Html.HiddenFor(model => model.Id)
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Name)
-        </div>
+        <div class="editor-label">@Html.LabelFor(model => model.Name)</div>
         <div class="editor-field">
             @Html.EditorFor(model => model.Name)
             @Html.ValidationMessageFor(model => model.Name)
         </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Description)
-        </div>
+        <div class="editor-label">@Html.LabelFor(model => model.Description)</div>
         <div class="editor-field">
             @Html.EditorFor(model => model.Description)
             @Html.ValidationMessageFor(model => model.Description)
         </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.FactoryId, "Factory")
-        </div>
+        <div class="editor-label">@Html.LabelFor(model => model.FactoryId, "Factory")</div>
         <div class="editor-field">
             @Html.DropDownList("FactoryId", String.Empty)
             @Html.ValidationMessageFor(model => model.FactoryId)
         </div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ProtocolType)
-        </div>
+        <div class="editor-label">@Html.LabelFor(model => model.ProtocolType)</div>
         <div class="editor-field">
             @Html.EditorFor(model => model.ProtocolType)
             @Html.ValidationMessageFor(model => model.ProtocolType)

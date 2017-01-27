@@ -1,16 +1,18 @@
 ﻿@model MPT.Model.PLC
-
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Добавить";
 }
+<h2>@ViewBag.Title</h2>
 
-<h2>Create</h2>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
 
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
 
     <fieldset>
-        <legend>Plc</legend>
+        <legend>Контроллер</legend>
 
         <div class="editor-label">
             @Html.LabelFor(model => model.Name)
@@ -48,15 +50,12 @@
         </div>
 
         <p>
-            <input type="submit" value="Create" />
+            <input type="submit" value="Создать" />
         </p>
     </fieldset>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Назад", "Index")
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

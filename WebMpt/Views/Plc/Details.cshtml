@@ -1,13 +1,12 @@
 ﻿@model MPT.Model.PLC
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Детально";
 }
-
-<h2>Details</h2>
+<h2>@ViewBag.Title</h2>
 
 <fieldset>
-    <legend>Plc</legend>
+    <legend>Контроллер</legend>
 
     <div class="display-label">@Html.DisplayNameFor(model => model.Name)</div>
     <div class="display-field">@Html.DisplayFor(model => model.Name)</div>
@@ -25,6 +24,6 @@
     <div class="display-field">@Html.DisplayFor(model => model.LastEventIndex)</div>
 </fieldset>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Изменить", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Назад", "Index")
 </p>
