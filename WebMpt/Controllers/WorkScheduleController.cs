@@ -44,18 +44,17 @@ namespace WebMpt.Controllers
 
             var years = sheduleMonthDates.Select(x => x.Year).Distinct();
 
-            IEnumerable<DateTime> holidays = null;
-            IEnumerable<WorkScheduleMove> overWorkdays = null;
+            Dictionary<DateTime, string> holidays = null;
+            Dictionary<DateTime, DateTime> overWorkdays = null;
 
             using (var db = new MPTEntities())
             {
-                holidays = db.GetHolidays(years);
-                overWorkdays = db.GetOverrideWorkdays(years);
+                holidays = db.GetHolidays(years.ToArray());
+                overWorkdays = db.GetOverWorkdays(years.ToArray());
             }
 
             var data = sheduleMonthDates.Select(date => new ScheduleMonth(date, holidays, overWorkdays));
             return View(data);
         }
-
     }
 }
