@@ -14,12 +14,16 @@ namespace WebMpt.Controllers
     {
         private MPTEntities db = new MPTEntities();
 
+
+
         //
         // GET: /Project/
         public ActionResult Index()
         {
             return View(db.ProjectHMIs.Include(x=>x.Factory).OrderBy(x=>x.FactoryId).ThenBy(x=>x.OrderIndex) .ToList());
         }
+
+
 
         //
         // GET: /Project/Details/5
@@ -33,12 +37,16 @@ namespace WebMpt.Controllers
             return View(project);
         }
 
+
+
         //
         // GET: /Project/Create
         public ActionResult Create()
         {
             return View();
         }
+
+
 
         //
         // POST: /Project/Create
@@ -53,6 +61,8 @@ namespace WebMpt.Controllers
             return RedirectToAction("Index");
         }
 
+
+
         //
         // GET: /Project/Edit/5
         public ActionResult Edit(long id = 0)
@@ -65,9 +75,10 @@ namespace WebMpt.Controllers
             return View(project);
         }
 
+
+
         //
         // POST: /Project/Edit/5
-
         [HttpPost]
         public ActionResult Edit(ProjectHMI project)
         {
@@ -79,6 +90,8 @@ namespace WebMpt.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
 
         //
         // GET: /Project/Delete/5
@@ -92,6 +105,8 @@ namespace WebMpt.Controllers
             return View(project);
         }
 
+
+
         //
         // POST: /Project/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -102,6 +117,8 @@ namespace WebMpt.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
 
         protected override void Dispose(bool disposing)
         {

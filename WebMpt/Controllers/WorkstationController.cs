@@ -7,17 +7,17 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
-
 using PagedList;
-using MPT.Model;
 
+using MPT.Model;
 
 namespace WebMpt.Controllers
 {
     public class WorkstationController : Controller
     {
         private readonly MPTEntities db = new MPTEntities();
+
+
 
         //
         // GET: /Workstation/
@@ -26,6 +26,8 @@ namespace WebMpt.Controllers
             var workstations = db.GetWorkstations();
             return View(workstations.ToList());
         }
+
+
 
         public ActionResult Events(int? id = null, int page = 1, int pageSize = 250, bool hideIgnored = false)
         {
@@ -75,6 +77,8 @@ namespace WebMpt.Controllers
             return View(pcEventsPagedList);
         }
 
+
+
         //
         // GET: /Workstation/Details/5
         public ActionResult Details(long id = 0)
@@ -88,6 +92,7 @@ namespace WebMpt.Controllers
         }
 
 
+
         //
         // GET: /Workstation/Create
         public ActionResult Create()
@@ -96,6 +101,7 @@ namespace WebMpt.Controllers
 
             return View();
         }
+
 
 
         //
@@ -114,6 +120,7 @@ namespace WebMpt.Controllers
         }
 
 
+
         //
         // GET: /Workstation/Edit/5
         public ActionResult Edit(long id = 0)
@@ -126,6 +133,7 @@ namespace WebMpt.Controllers
             ViewBag.ProjectId = new SelectList(db.ProjectHMIs, "ID", "Name", workstation.ProjectId);
             return View(workstation);
         }
+
 
 
         //
@@ -145,6 +153,7 @@ namespace WebMpt.Controllers
         }
 
 
+
         //
         // GET: /Workstation/Delete/5
         public ActionResult Delete(long id = 0)
@@ -158,6 +167,7 @@ namespace WebMpt.Controllers
         }
 
 
+
         //
         // POST: /Workstation/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -168,6 +178,7 @@ namespace WebMpt.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
 
 
         protected override void Dispose(bool disposing)
