@@ -1,25 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 using MPT.Model;
 
 namespace WebMpt.Model
 {
-    public static class StringToIntList
+    public static partial class MPTEntitiesExt
     {
-        private static Regex SplitNumbersRegex = new Regex(@"\D+", RegexOptions.Compiled);
-        public static IEnumerable<int> SplitToIntList(string str)
+        public static IEnumerable<PlcDTO> GetPlcDTOList(this MPTEntities db, DateTime? fromDT = null, DateTime? toDT = null)
         {
-            if (str == null) throw new ArgumentNullException("list");
-            var numberList = SplitNumbersRegex.Split(str);
-            return numberList.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => Convert.ToInt32(x)).ToList();
+            if (fromDT == null)
+                fromDT = DateTime.Now.Date;
+            if (toDT == null)
+                toDT = DateTime.Now.AddDays(1).Date;
+            if (fromDT > toDT)
+                fromDT = toDT;
+
+            var plcEventsCountDict = db.GetPlcEventsCount(fromDT.Value, toDT.Value, severity: 2).ToDictionary(x => x.PlcId, y => y);
+            return db.GetPLCs(protocolOnly:true).ToList().Select(x=>PlcDTO.MapPlc(x, plcEventsCountDict));
         }
     }
-
 
     public class PlcDTO
     {
@@ -35,82 +37,70 @@ namespace WebMpt.Model
         public string Description { get; set; }
 
         [Display(Name = "Дата последнего")]
+        [DataType(DataType.DateTime)]
         public DateTime? LastEventDateTime { get; set; }
 
-        public Factory Factory { get; set; }
+        public int FactoryId { get; set; }
+        public int? FactoryNumber { get; set; }
+        public string FactoryName { get; set; }
+        public string FactoryFullName { get; set; }
 
         public int? OrderIndex { get; set; }
 
         [Display(Name = "Сегодня")]
-        [DisplayFormat(ConvertEmptyStringToNull = true, NullDisplayText = "&nbsp;", HtmlEncode = false)]
-        public int? TodayCount { get; set; }
-
-        public bool HasWarningToday { get; set; }
-
+        public int? EventCount { get; set; }
+        public int? AlarmCount { get; set; }
+        public bool HasAlarm { get { return AlarmCount > 0; } }
         public int ProtocolType { get; set; }
 
         public override string ToString()
         {
             return string.Format("{0}: {1}", Id, Name);
         }
-    }
 
-
-    public class PlcEventListDTO
-    {
-        //public const string DateFormat = "yyyy-MM-dd";
-
-        public PLC Plc { get; set; }
-
-        public IEnumerable<PlcEventDTO> EventList { get; set; }
-
-        [Display(Name="Дата по")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [HiddenInput(DisplayValue = true)]
-        public DateTime DateEnd { get; set; }
-
-        [Display(Name = "Дата c")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [HiddenInput(DisplayValue = true)]
-        public DateTime DateBegin { get; set; }
-        
-        private void MoveDate(int days=1)
+        public static PlcDTO MapPlc(PLC plc, int? totalCount = null, int? alarmCount = null)
         {
-            DateEnd = DateEnd.AddDays(days);
-            DateBegin = DateBegin.AddDays(days);
+            if (plc == null)
+                return null;
+
+            var plcDTO = new PlcDTO();
+            plcDTO.Id = plc.Id;
+            plcDTO.Name = plc.Name;
+            plcDTO.FullName = plc.FullName;
+            plcDTO.Description = plc.Description;
+            plcDTO.LastEventDateTime = plc.LastEventDateTime;
+
+            plcDTO.FactoryId = plc.FactoryId;
+            if (plc.Factory != null)
+            {
+                plcDTO.FactoryNumber = plc.Factory.Number;
+                plcDTO.FactoryName = plc.Factory.Description;
+                plcDTO.FactoryFullName = plc.Factory.FullName;
+            }
+            plcDTO.OrderIndex = plc.OrderIndex;
+            plcDTO.ProtocolType = plc.ProtocolType != null ? plc.ProtocolType.Value : 0;
+
+            plcDTO.EventCount = totalCount;
+            plcDTO.AlarmCount = alarmCount;
+
+            return plcDTO;
         }
 
-        public void NextDate()
+        public static PlcDTO MapPlc(PLC plc, Dictionary<int, GetPlcEventsCount_Result> plcEventsCountDict)
         {
-            MoveDate(1);
+            if (plc == null)
+                return null;
+
+            int? totalCount = null;
+            int? alarmCount = null;
+
+            if (plcEventsCountDict != null && plcEventsCountDict.ContainsKey(plc.Id))
+            {
+                var count = plcEventsCountDict[plc.Id];
+                totalCount = count.TotalCount;
+                alarmCount = count.AlarmCount;
+            }
+            return MapPlc(plc, totalCount, alarmCount);
         }
-
-        public void PrevDate()
-        {
-            MoveDate(-1);
-        }
-
-
-        [Display(Name = "Спрятать обрывы")]
-        public bool HideBreak { get; set; }
-
-        [Display(Name = "Показать группы")]
-        public bool ShowGroup{ get; set; }
-
-        [Display(Name = "Обратная хронология")]
-        public bool SortOrderDesc { get; set; }
-
-        [Display(Name = "Найти по номерам")]
-        public string Numbers { get; set; }
-
-        public IEnumerable<int> NumberList
-        {
-            get { return StringToIntList.SplitToIntList(Numbers); }
-        }
-
-        [Display(Name = "Найти текст")]
-        public string Message { get; set; }
     }
 }

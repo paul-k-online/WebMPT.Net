@@ -2,9 +2,8 @@
 @model PlcEventListDTO
 
 @{
-    ViewBag.Title = string.Format("Протокол событий контроллера \"{0}\"", ViewBag.PlcFullName);
-    ViewBag.Message = ViewBag.PlcFullName;
-
+    ViewBag.Title = string.Format("Протокол событий: \"{0}\"", Model.Plc.FullName);
+    ViewBag.Message = Model.Plc.FullName;
     ViewBag.LeftContent = ViewBag.Title;
 }
 
@@ -17,14 +16,14 @@
     </script>
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Get, new { @id = "SearchForm", @class = "form-horizontal" }))
+@using (Html.BeginForm(null, null, FormMethod.Get, new {@id = "SearchForm", @class = "form-horizontal"}))
 {
     <fieldset>
         <legend>Фильтр</legend>
 
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Дополнительные опции</a>
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Дополнительно</a>
             </h4>
         </div>
 
@@ -45,8 +44,8 @@
                 <div class="form-group checkbox">
                     <div class="col-sm-offset-2 col-sm-10">
                         <label>
-                            @Html.CheckBoxFor(m => m.SortOrderDesc, new { @defaultValue = false})
-                            @Html.DisplayNameFor(m => m.SortOrderDesc)
+                            @Html.CheckBoxFor(m => m.Desc, new { @defaultValue = false})
+                            @Html.DisplayNameFor(m => m.Desc)
                         </label>
                     </div>
                 </div>
@@ -63,8 +62,8 @@
                 <div class="form-group checkbox">
                     <div class="col-sm-offset-2 col-sm-10">
                         <label>
-                            @Html.CheckBoxFor(m => m.ShowGroup, new { @defaultValue = false})
-                            @Html.DisplayNameFor(m => m.ShowGroup)
+                            @Html.CheckBoxFor(m => m.Group, new { @defaultValue = false})
+                            @Html.DisplayNameFor(m => m.Group)
                         </label>
                     </div>
                 </div>
@@ -75,85 +74,53 @@
 
         <div class="form-group">
 
-                @Html.LabelFor(x => Model.DateBegin, new {@class = "col-sm-2 control-label"})
+                @Html.LabelFor(x => Model.From, new {@class = "col-sm-2 control-label"})
                 <div class="col-sm-3">
                     <div class="input-group date">
-                        <label for="@Html.NameFor(i => i.DateBegin)" class="input-group-addon">
+                        <label for="@Html.NameFor(i => i.From)" class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"/>
                         </label>
-                        <input id="@Html.NameFor(i => i.DateBegin)"
-                               name="@Html.NameFor(i => i.DateBegin)"
-                               value="@Html.DisplayFor(i => i.DateBegin)"
+                        <input id="@Html.NameFor(i => i.From)"
+                               name="@Html.NameFor(i => i.From)"
+                               value="@Html.DisplayFor(i => i.From)"
                                class="form-control" type="text"/>
                     </div>
                 </div>
 
-                @Html.LabelFor(x => Model.DateEnd, new {@class = "col-sm-2 control-label"})
+                @Html.LabelFor(x => Model.To, new {@class = "col-sm-2 control-label"})
                 <div class="col-sm-3">
                     <div class="input-group date">
-                        <label for="@Html.NameFor(i => i.DateEnd)" class="input-group-addon">
+                        <label for="@Html.NameFor(i => i.To)" class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"/>
                         </label>
-                        <input id="@Html.NameFor(i => i.DateEnd)"
-                               name="@Html.NameFor(i => i.DateEnd)"
-                               value="@Html.DisplayFor(i => i.DateEnd)"
+                        <input id="@Html.NameFor(i => i.To)"
+                               name="@Html.NameFor(i => i.To)"
+                               value="@Html.DisplayFor(i => i.To)"
                                class="form-control" type="text"/>
                     </div>
                 </div>
-@*
-    <div class="input-group input-daterange">
-        <span class="input-group-addon">От</span>
-        <input type="text" class="form-control"
-               id="@Html.NameFor(i => i.DateBegin)"
-               value="@Html.DisplayFor(i => i.DateBegin)">
-        <span class="input-group-addon">До</span>
-        <input type="text" class="form-control"
-               id="@Html.NameFor(i => i.DateEnd)"
-               value="@Html.DisplayFor(i => i.DateEnd)">
-    </div>
-*@
-            
             <script type="text/javascript">
-                @*
-                $('#@Html.NameFor(i => i.DateBegin)').datepicker();
-                $('#@Html.NameFor(i => i.DateBegin)').on("changeDate", function() {
-                    $('#my_hidden_input').val(
-                        $('#datepicker').datepicker('getFormattedDate')
-                    );
-
-                $('.input-daterange input').each(function () {
-                    $(this).datepicker();
-                    format
-                });
-                *@
-                $(function () {
-                    $('#@Html.NameFor(i => i.DateBegin)')
-                        .datetimepicker({
-                            locale: 'ru',
-                            format: "YYYY-MM-DD",
-                            //showTodayButton: true,
-                            maxDate: moment(),
-                            //maxDate: $('#@Html.NameFor(i => i.DateEnd)').data("DateTimePicker").viewDate,
-                            //useCurrent: false //Important! See issue #1075
-                        });
-
-                    $('#@Html.NameFor(i => i.DateEnd)')
+                $('#@Html.NameFor(i => i.From)')
                     .datetimepicker({
-                            locale: 'ru',
-                            format: "YYYY-MM-DD",
-                            showTodayButton: true,
-                            maxDate: moment(),
-                            //useCurrent: false //Important! See issue #1075
+                        locale: 'ru',
+                        format: "YYYY-MM-DD",
+                        //showTodayButton: true,
+                        maxDate: moment(),
+                        //maxDate: dpTo.viewDate,
+                        //useCurrent: false //Important! See issue #1075
                     });
 
-                    $('#@Html.NameFor(i => i.DateEnd)').on("dp.change", function (e) {
-                        $('#@Html.NameFor(i => i.DateBegin)').data("DateTimePicker").maxDate(e.date);
+                $('#@Html.NameFor(i => i.To)')
+                    .datetimepicker({
+                        locale: 'ru',
+                        format: "YYYY-MM-DD",
+                        showTodayButton: true,
+                        maxDate: moment(),
+                        //useCurrent: false //Important! See issue #1075
                     });
-                    $('@Html.NameFor(i => i.DateBegin)').on("dp.change", function (e) {
-                        $('#@Html.NameFor(i => i.DateEnd)').data("DateTimePicker").minDate(e.date);
-                    });
-                });
-                
+
+                $('#@Html.NameFor(i => i.To)').on("dp.change", function (e) { $('#@Html.NameFor(i => i.From)').data("DateTimePicker").maxDate(e.date); });
+                $('#@Html.NameFor(i => i.From)').on("dp.change", function (e) { $('#@Html.NameFor(i => i.To)').data("DateTimePicker").minDate(e.date); });
             </script>
         </div>
 
@@ -170,18 +137,18 @@
 <table id="EventsTable" class="table table-bordered table-striped table-hover table-condensed">
     <thead>
     <tr>
-        @{ var first = Model.EventList.FirstOrDefault(); }
-        <th> @Html.DisplayNameFor(model => first.Date)</th>
-        <th> @Html.DisplayNameFor(model => first.Time)</th>
-        <th> @Html.DisplayNameFor(model => first.Number)</th>
-        <th> @Html.DisplayNameFor(model => first.Message)</th>
-        <th> @Html.DisplayNameFor(model => first.StringCode)</th>
-        <th> @Html.DisplayNameFor(model => first.StringValue)</th>
+        @{ var head = new PlcEventDTO(); }
+        <th> @Html.DisplayNameFor(model => head.Date)</th>
+        <th> @Html.DisplayNameFor(model => head.Time)</th>
+        <th> @Html.DisplayNameFor(model => head.Number)</th>
+        <th> @Html.DisplayNameFor(model => head.Message)</th>
+        <th> @Html.DisplayNameFor(model => head.CodeString)</th>
+        <th> @Html.DisplayNameFor(model => head.ValueString)</th>
     </tr>
     </thead>
 
     <tbody>
-        @foreach (var plcEventDTO in Model.EventList)
+        @foreach (var plcEventDTO in Model.PlcEventDTOList)
         {
             var styleClass = "";
             switch (plcEventDTO.SeverityNumber)
@@ -210,11 +177,11 @@
                             @Html.Raw("нарушение")
                             break;
                         default:
-                            @Html.DisplayFor(i => (plcEventDTO.StringCode))
+                            @Html.DisplayFor(i => (plcEventDTO.CodeString))
                             break;
                     }
                 </td>
-                <td>@Html.DisplayFor(i => (plcEventDTO.StringValue))</td>
+                <td>@Html.DisplayFor(i => (plcEventDTO.ValueString))</td>
                 <!--
                 <td>@Html.DisplayFor(i => (plcEventDTO.Value))</td>
                 -->

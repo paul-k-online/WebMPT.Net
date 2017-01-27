@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using WebMpt.Model;
+
 using MPT.Model;
 using MPT.Positions;
 
-using MPTEntitiesExt = WebMpt.Model.MPTEntitiesExt;
+using WebMpt.Model;
 
 namespace WebMpt.Controllers
 {
@@ -16,6 +15,7 @@ namespace WebMpt.Controllers
     {
         private readonly MPTEntities _db = new MPTEntities();
         
+
 
         /// <summary>
         /// GET: /Plc/
@@ -27,129 +27,134 @@ namespace WebMpt.Controllers
             return View(plcDtoList);
         }
 
+
+
         //
         // GET: /Plc/Events/5
-        public ActionResult Events(int id,
-            string dateEnd = null, string dateBegin = null,
+        public ActionResult Events(object id,
+            string from = null, string to = null,
             string numbers = null, string message = null,
-            bool hideBreak = false, bool sortOrderDesc = false, bool showGroup = false)
+            bool hideBreak = false, bool desc = false, bool groups = false)
         {
-            
-            var plc = _db.GetPlc(id);
-            ViewBag.PlcFullName = plc.FullName;
+            PLC plc = null;
+            try
+            {
+                int plcid = Convert.ToInt32(id);
+                plc = _db.GetPLC(plcid);
+
+            }
+            catch(Exception)
+            { }
+
+            if (plc == null)
+            {
+                plc = _db.GetPLC(id.ToString());
+            }
+
+            if (plc == null)
+                return RedirectToAction("Index");
+
+
+            //ViewBag.PlcFullName = plc.FullName;
 
             var plcEventListDTO = new PlcEventListDTO
             {
                 Plc = plc,
-                Numbers = numbers, 
+                Numbers = numbers,
                 Message = message,
-                DateEnd = DateTime.Now.Date,
-                DateBegin = DateTime.Now.Date,
-                HideBreak = hideBreak, 
-                SortOrderDesc = sortOrderDesc,
-                ShowGroup = showGroup,
+                From = DateTime.Now.Date,
+                To = DateTime.Now.Date,
+                HideBreak = hideBreak,
+                Desc = desc,
+                Group = groups,
             };
 
-
-            if (!string.IsNullOrWhiteSpace(dateEnd))
+            if (!string.IsNullOrWhiteSpace(from))
             {
                 try
                 {
-                    plcEventListDTO.DateEnd = DateTime.Parse(dateEnd).Date;
+                    plcEventListDTO.From = DateTime.Parse(from);
                 }
                 catch { }
             }
-
-            if (!string.IsNullOrWhiteSpace(dateBegin))
+            if (!string.IsNullOrWhiteSpace(to))
             {
                 try
                 {
-                    plcEventListDTO.DateBegin = DateTime.Parse(dateBegin).Date;
+                    plcEventListDTO.To = DateTime.Parse(to);
                 }
-                catch{}
-            }
-            
-            if (plcEventListDTO.DateBegin > plcEventListDTO.DateEnd)
-            {
-                plcEventListDTO.DateBegin = plcEventListDTO.DateEnd;
+                catch {}
             }
 
-
-            var filterDateFrom = plcEventListDTO.DateBegin.Date;
-            var filterDateTo = plcEventListDTO.DateEnd.AddDays(1).Date;
-            
-            
-            if (plc.ProtocolType == 1)
-            {
-                var events = _db.GetEventsByPlc(plc.Id);
-                events = events.Where(x => x.DateTime >= filterDateFrom  &&  x.DateTime < filterDateTo);
-
-                if (!string.IsNullOrEmpty(plcEventListDTO.Numbers))
-                {
-                    //events = events.Where(e => e.MessageNumber == plcEventListDTO.Numbers);
-
-                    if (plcEventListDTO.NumberList != null && plcEventListDTO.NumberList.Any())
-                        events = events.Where(x => plcEventListDTO.NumberList.Contains(x.MessageNumber));
-                }
+            plcEventListDTO.PlcEventDTOList  = _db.GetPlcEventDTOList(
+                plcEventListDTO.Plc,
+                plcEventListDTO.From,
+                plcEventListDTO.To.AddDays(1),
+                plcEventListDTO.NumberList,
+                plcEventListDTO.Message,
+                plcEventListDTO.HideBreak,
+                plcEventListDTO.Desc
+                );
 
 
-                if (!string.IsNullOrEmpty(plcEventListDTO.Message))
-                    events = events.Where(e => e.PlcMessage.Text.ToUpper().Contains(plcEventListDTO.Message.ToUpper()));
-                
-                if (plcEventListDTO.HideBreak)
-                    events = events.Where(x => x.CodeId != 16 && x.CodeId != 48);
+            if (plcEventListDTO.PlcEventDTOList == null)
+                return RedirectToAction("Index");
 
-                events = plcEventListDTO.SortOrderDesc ? 
-                    events.OrderByDescending(x => x.DateTime).ThenByDescending(x=>x.Msec).ThenBy( x => x.Id) : 
-                    events.OrderBy(x => x.DateTime).ThenBy(x => x.Msec).ThenByDescending(x => x.Id);
-
-                plcEventListDTO.EventList = MPTEntitiesExt.MapPlcEventList(events);
-                return View(plcEventListDTO);
-            }
-
-            
-            if (plc.ProtocolType == 2)
-            {
-                var events = _db.GetEventsOldByPlc(plc);
-                events = events.Where(x => x.DateTime >= filterDateFrom && x.DateTime < filterDateTo);
-
-                if (plcEventListDTO.Numbers != null)
-                {
-                    if (plcEventListDTO.NumberList != null && plcEventListDTO.NumberList.Any())
-                    {
-                        events = events.Where(x => plcEventListDTO.NumberList.Contains(x.MessageNumber));
-                    }
-                }
-
-                if (plcEventListDTO.SortOrderDesc)
-                    events = events.OrderByDescending(x => x.DateTime).ThenByDescending(x => x.Id);
-                else
-                    events = events.OrderBy(x => x.DateTime).ThenBy(x => x.Id);
-
-                var codes = _db.PlcEventCodes.Include(x => x.Severity).ToList();
-                plcEventListDTO.EventList = MPTEntitiesExt.MapPlcOldEventList(events, codes);
-
-                if (!string.IsNullOrEmpty(plcEventListDTO.Message))
-                    plcEventListDTO.EventList = plcEventListDTO.EventList.Where(e => e.Message.ToUpper().Contains(plcEventListDTO.Message.ToUpper()));
-
-                if (plcEventListDTO.HideBreak)
-                    plcEventListDTO.EventList = plcEventListDTO.EventList.Where(x => x.Code != 16 && x.Code != 48);
-
-                return View(plcEventListDTO);
-            }
-
-            return RedirectToAction("Index");
+            return View(plcEventListDTO);
         }
+
+
+
+        //[HttpPost]
+        public JsonResult EventList(int id = 0, int jtStartIndex = 1, int jtPageSize = 100)
+        {
+            try
+            {
+                // var plcEventsViewPagedList = plcEvents.ToPagedList(jtStartIndex, jtPageSize);
+                var plc = _db.GetPLC(id);
+                var plcEventListDTO = new PlcEventListDTO()
+                {
+                    Plc = plc,
+                };
+                /*
+                plcEventListDTO.PlcEventDTOList = _db.GetPlcEventDTOList(
+                        plcEventListDTO.Plc,
+                        plcEventListDTO.DateBegin,
+                        plcEventListDTO.DateEnd,
+                        plcEventListDTO.NumberList,
+                        plcEventListDTO.Message,
+                        plcEventListDTO.HideBreak,
+                        plcEventListDTO.SortOrderDesc
+                        );
+                        */
+                return Json(new { Result = "OK", Records = plcEventListDTO.PlcEventDTOList });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = "ERROR", Message = ex.Message });
+            }
+        }
+
 
 
         public ActionResult Messages(int id)
         {
-            var plc = _db.GetPlc(id);
+            var plc = _db.GetPLC(id);
             ViewBag.PlcId = plc.Id;
             ViewBag.PlcFullName = plc.FullName;
 
             return View(plc.Messages);
         }
+
+
+
+        [HttpPost]
+        public ActionResult RsViewTagsGenerate(HttpPostedFileBase excelFile, string nodeName = null)
+        {
+            return View();
+        }
+
+
 
         [HttpPost]
         public ActionResult MessagesUpdate(HttpPostedFileBase excelFile = null, int? plcId = null)
@@ -161,7 +166,7 @@ namespace WebMpt.Controllers
             try
             {
                 excelFile.SaveAs(path);
-                var plc = _db.GetPlc(plcId.Value);
+                var plc = _db.GetPLC(plcId.Value);
                 var excelPositionList = new ExcelPositionList(path, plc.Id);
                 if (!excelPositionList.LoadMessagesSheet())
                 {
@@ -196,6 +201,7 @@ namespace WebMpt.Controllers
         }
 
 
+
         [HttpPost]
         public ActionResult MessagesUpdateApply()
         {
@@ -211,26 +217,7 @@ namespace WebMpt.Controllers
             return RedirectToAction("Messages", new { id = messagesMerge.PlcId });
         }
 
-        /*
-        [HttpPost]
-        public JsonResult EventList(int plcId = 0, int jtStartIndex = 1, int jtPageSize = 100 )
-        {
-            try
-            {
-                var plc = _db.GetPlc(plcId);
-                var plcEvents = _db.GetEventsByPlc(plc);
 
-
-                
-                var plcEventsViewPagedList = plcEvents.ToPagedList(jtStartIndex, jtPageSize);
-                return Json(new { Result = "OK", Records = plcEventsViewPagedList });
-            }
-            catch (Exception ex)
-            {
-                return Json(new {Result = "ERROR", Message = ex.Message});
-            }
-        }
-        */
 
         //
         // GET: /Plc/Details/5
@@ -245,11 +232,13 @@ namespace WebMpt.Controllers
         }
 
 
+
         public ActionResult Create()
         {
             ViewBag.FactoryId = new SelectList(_db.Factories.Where(f => f.Enable == 1), "Id", "Description");
             return View();
         }
+
 
 
         [HttpPost]
@@ -268,6 +257,7 @@ namespace WebMpt.Controllers
         }
 
 
+
         //
         // GET: /Plc/Edit/5
         public ActionResult Edit(int id = 0)
@@ -281,6 +271,7 @@ namespace WebMpt.Controllers
             // ViewBag.PlcTypeId = new SelectList(db.PlcTypes, "ID", "Name", plc.PlcTypeId);
             return View(plc);
         }
+
 
 
         //
@@ -301,6 +292,7 @@ namespace WebMpt.Controllers
         }
 
 
+
         //
         // GET: /Plc/Delete/5
         public ActionResult Delete(int id = 0)
@@ -313,6 +305,8 @@ namespace WebMpt.Controllers
             return View(plc);
         }
 
+
+
         //
         // POST: /Plc/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -323,6 +317,8 @@ namespace WebMpt.Controllers
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
 
         protected override void Dispose(bool disposing)
         {
