@@ -1,11 +1,11 @@
-﻿@model ICollection<WebMPT.Model.ExternalLogin>
+﻿@model ICollection<WebMpt.Model.ExternalLogin>
 
 @if (Model.Count > 0)
 {
     <h3>Registered external logins</h3>
     <table>
         <tbody>
-        @foreach (WebMPT.Model.ExternalLogin externalLogin in Model)
+        @foreach (WebMpt.Model.ExternalLogin externalLogin in Model)
         {
             <tr>
                 <td>@externalLogin.ProviderDisplayName</td>

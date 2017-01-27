@@ -17,7 +17,6 @@ namespace WebMpt.Controllers
     [InitializeSimpleMembership]
     public class AccountController : Controller
     {
-        
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -26,6 +25,7 @@ namespace WebMpt.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
+
 
         //
         // POST: /Account/Login
@@ -40,31 +40,29 @@ namespace WebMpt.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            ModelState.AddModelError("", "The user name or password provided is incorrect.");
+            ModelState.AddModelError("", "Имя или пароль указаны неверно.");
             return View(model);
         }
 
+
         //
         // POST: /Account/LogOff
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
             WebSecurity.Logout();
-
             return RedirectToAction("Index", "Home");
         }
 
+
         //
         // GET: /Account/Register
-
         [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
         }
-
 
 
         //
@@ -94,7 +92,6 @@ namespace WebMpt.Controllers
         }
 
 
-
         //
         // POST: /Account/Disassociate
         [HttpPost]
@@ -119,10 +116,8 @@ namespace WebMpt.Controllers
                     }
                 }
             }
-
             return RedirectToAction("Manage", new { Message = message });
         }
-
 
 
         //
@@ -130,15 +125,14 @@ namespace WebMpt.Controllers
         public ActionResult Manage(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
+                message == ManageMessageId.ChangePasswordSuccess ? "Ваш пароль изменен."
+                : message == ManageMessageId.SetPasswordSuccess ? "Ваш пароль установлен."
+                : message == ManageMessageId.RemoveLoginSuccess ? "Внешний аккаунт удален."
                 : "";
             ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
             ViewBag.ReturnUrl = Url.Action("Manage");
             return View();
         }
-
 
 
         //
@@ -171,7 +165,7 @@ namespace WebMpt.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                        ModelState.AddModelError("", "Текущий пароль неверен или новый пароль некорректен.");
                     }
                 }
             }
@@ -252,7 +246,6 @@ namespace WebMpt.Controllers
 
         //
         // POST: /Account/ExternalLoginConfirmation
-
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -297,13 +290,11 @@ namespace WebMpt.Controllers
 
         //
         // GET: /Account/ExternalLoginFailure
-
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {
             return View();
         }
-
 
 
         [AllowAnonymous]
@@ -376,8 +367,7 @@ namespace WebMpt.Controllers
 
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {
-            // See http://go.microsoft.com/fwlink/?LinkID=177550 for
-            // a full list of status codes.
+            // See http://go.microsoft.com/fwlink/?LinkID=177550 for a full list of status codes.
             switch (createStatus)
             {
                 case MembershipCreateStatus.DuplicateUserName:

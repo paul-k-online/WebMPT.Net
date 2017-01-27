@@ -13,7 +13,6 @@ namespace WebMpt.Model
     {
         public UsersContext() : base("Account")
         {}
-
         public DbSet<UserProfile> UserProfiles { get; set; }
     }
 

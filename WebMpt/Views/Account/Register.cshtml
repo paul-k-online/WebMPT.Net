@@ -1,11 +1,10 @@
-﻿@model WebMPT.Model.RegisterModel
+﻿@model WebMpt.Model.RegisterModel
 @{
     ViewBag.Title = "Регистрация";
 }
 
 <hgroup class="title">
     <h1>@ViewBag.Title</h1>
-    <h2>Создать аккаунт</h2>
 </hgroup>
 
 @section Scripts {
@@ -16,43 +15,36 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
-
     <fieldset>
-        <legend>Форма регистрации</legend>
+        <legend>Создать аккаунт</legend>
         <div class="form-group">
             @Html.LabelFor(m => m.UserName, htmlAttributes: new {@class = "col-sm-2 control-label"})
             <div class="col-sm-10">
                 @Html.TextBoxFor(m => m.UserName, htmlAttributes: new {@class = "form-control"})
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(m => m.Password, htmlAttributes: new {@class = "col-sm-2 control-label"})
             <div class="col-sm-10">
                 @Html.PasswordFor(m => m.Password, htmlAttributes: new {@class = "form-control"})
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(m => m.ConfirmPassword, htmlAttributes: new {@class = "col-sm-2 control-label"})
             <div class="col-sm-10">
                 @Html.PasswordFor(m => m.ConfirmPassword, htmlAttributes: new {@class = "form-control"})
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(m => m.Email, htmlAttributes: new {@class = "col-sm-2 control-label"})
             <div class="col-sm-10">
                 @Html.TextBoxFor(m => m.Email, htmlAttributes: new {@class = "form-control"})
             </div>
         </div>
-
-
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <input type="submit" value="Зарегистрировать" class="btn btn-default"/>
             </div>
         </div>
-
     </fieldset>
 }
