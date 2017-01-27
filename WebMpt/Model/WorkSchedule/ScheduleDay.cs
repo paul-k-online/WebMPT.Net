@@ -8,11 +8,13 @@ namespace WebMpt.Model.WorkSchedule
     /// </summary>
     public class ScheduleDay
     {
+        public DateTime DateTime { get; private set; }
         public bool IsHoliday { get; private set; }
         public bool IsRestday { get; private set; }
         public bool IsPreHoliday { get; private set; }
-        public DateTime DateTime { get; private set; }
-        
+        public bool IsMove { get; private set; }
+        public string ToolTip{ get; private set; }
+
 
         private readonly static ScheduleSmena[] SmenaDiff =
         {
@@ -26,17 +28,15 @@ namespace WebMpt.Model.WorkSchedule
             new ScheduleSmena(null, workHours: 0,   isNight: false),
         };
 
-        private static ushort GetDiffSh(DateTime day, SmenaName smena)
+        private static int GetDiffSh(DateTime day, SmenaName smena)
         {
-            /*
-             начало отсчета смен
-             А: 2011.01.(3)
-             Б: 2011.01.(5)
-             В: 2011.01.(1)
-             Г: 2011.01.(7)
-             */
-            var totalDays = (day.Date.Subtract(new DateTime(2011, 1, (int)smena))).TotalDays;
-            return Convert.ToUInt16(totalDays % 8);
+            // начало отсчета смен
+            // А: 2011.01.(3)
+            // Б: 2011.01.(5)
+            // В: 2011.01.(1)
+            // Г: 2011.01.(7)
+            var totalDays = (day.Date.Subtract(new DateTime(2011, 01, (int)smena))).TotalDays;
+            return (int)(totalDays % 8);
         }
 
         private readonly Dictionary<SmenaName, ScheduleSmena> _smenaList = new Dictionary<SmenaName, ScheduleSmena>();
@@ -44,31 +44,25 @@ namespace WebMpt.Model.WorkSchedule
         {
             get { return _smenaList.ContainsKey(key) ? _smenaList[key] : null; }
         }
-
         
-        public ScheduleDay(DateTime day, bool isHoliday = false, bool isPreHoliday = false, bool isRestday = false)
+
+        public ScheduleDay(DateTime day, bool isHoliday = false, bool isPreHoliday = false, bool isRestday = false, bool isMove=false, string tooltip = "")
         {
             DateTime = day;
             IsHoliday = isHoliday;
             IsPreHoliday = isPreHoliday;
             IsRestday = isRestday;
+            IsMove = isMove;
+            ToolTip = tooltip;
 
             foreach (SmenaName smenaName in Enum.GetValues(typeof(SmenaName)))
             {
                 if (smenaName == SmenaName.Day)
                 {
-                    var smenaDay = new ScheduleSmena(this);
-                    if (IsPreHoliday)
-                        smenaDay = new ScheduleSmena(this, 7);
-                    if (IsRestday || IsHoliday)
-                        smenaDay = new ScheduleSmena(this, 0);
-                    /*
-                    if (IsHoliday)
-                        smenaDay.BgColor = "Pink";
-                    if (IsPreHoliday && !IsRestday)
-                        smenaDay.BgColor = "Khaki";
-                    */
-                    _smenaList.Add(smenaName, smenaDay);
+                    uint h = 8;
+                    if (IsPreHoliday) h = 7;
+                    if (IsRestday || IsHoliday) h = 0;
+                    _smenaList.Add(smenaName, new ScheduleSmena(this, h));
                     continue;
                 }
                 var diff = GetDiffSh(DateTime, smenaName);

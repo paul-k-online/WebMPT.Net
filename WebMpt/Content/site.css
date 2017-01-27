@@ -125,14 +125,14 @@ ul#menu {
 
 
 
-.rotateText {
+ .RotateText {
     transform: rotate(-90deg); /* браузеры без префексов */
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3); /* Internet Explorer */
     filter: flipv fliph;
     text-align: left;
     white-space: nowrap;
     vertical-align: top;
-    width: 1.2em;
+    width: 1.0em;
     line-height: 40px !important;
     border:1px solid black;
 }
@@ -141,44 +141,45 @@ ul#menu {
 
 
 #ScheduleMonth {
-    text-align: center;
+    text-align: center !important;
     color:black;
     background-color: white;
 }
 
-#ScheduleMonth .SmenaName{
+#ScheduleMonth .SmenaName {
     font-weight: bold;   
 }
 
-#ScheduleMonth  .IsPreHoliday {
-    color:green;
+#ScheduleMonth .IsPreholyday {
+    background: LightYellow ;
 }
 
-#ScheduleMonth  .IsRestday {
-    color:darkred;
-    background: #FFF0F0;
+#ScheduleMonth .IsRestday {
+    background: LightPink;
 }
 
-#ScheduleMonth  .IsHoliday {
-    color:red;
+#ScheduleMonth .IsHoliday {
+    color: red;
     font-weight: bold;
-    background-color: #FFF0F0;
+    background: LightPink;
 }
-
-#ScheduleMonth  .Smena {
-    color:black;
+#ScheduleMonth .IsMove {
+    color: blue;
+}
+#ScheduleMonth .Smena {
+    color: black;
+    font-weight: normal;
     background-color: white;
 }
 
 #ScheduleMonth .IsNight {
-    background-color: lightgray;
+    background-color: LightGray;
 }
-/*
-#ScheduleMonth .Smena.IsHoliday {
-    color: red;
-}
-    */
 
+#ScheduleMonth .Smena.IsHoliday {
+    color: darkred;
+    font-weight: bold;
+}
 
 
 

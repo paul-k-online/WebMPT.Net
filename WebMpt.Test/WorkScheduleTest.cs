@@ -7,17 +7,13 @@ using WebMpt.Model.WorkSchedule;
 
 namespace WebMpt.Test.WorkSchedule
 {
-
-
     [TestClass]
     public class WorkScheduleTest
     {
-        HashSet<DateTime> holidays = new HashSet<DateTime>()
-            {
-                new DateTime(2015, 03, 08)
-            };
-
-
+        Dictionary<DateTime, string> holidays = new Dictionary<DateTime, string>()
+        {
+                { new DateTime(2015, 03, 08), "день баб" }
+        };
 
         [TestMethod]
         public void TestScheduleDay()
@@ -80,7 +76,6 @@ namespace WebMpt.Test.WorkSchedule
 
             var comparer = new SmenaNameByOrderAttribyteComparer();
             l.Sort(comparer);
-
         }
     }
 }

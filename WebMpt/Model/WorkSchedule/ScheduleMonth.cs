@@ -12,67 +12,51 @@ namespace WebMpt.Model.WorkSchedule
     public class ScheduleMonth
     {
         public DateTime FirstDay { get; private set; }
-        private IEnumerable<DateTime> Holidays;
-        private HashSet<DateTime> HolidaysCache;
-        private IEnumerable<WorkScheduleMove> OverWorkdays;
-        private HashSet<DateTime> OverWorkdaysCache;
+        private Dictionary<DateTime, string> Holidays;
+        private Dictionary<DateTime, DateTime> OverWorkdays;
         
-        private HashSet<DateTime> GetOverWorkdaysCache(IEnumerable<WorkScheduleMove> overWorkdays)
-        {
-            if (overWorkdays == null)
-                return null;
-            var dtHS = new HashSet<DateTime>(overWorkdays.Select(x => x.DateFrom.Date).Distinct());
-            dtHS.UnionWith(overWorkdays.Select(x=>x.DateTo.Date).Distinct());
-            return dtHS;
-        }
-
-        private HashSet<DateTime> GetHolidaysCache(IEnumerable<DateTime> holidays)
-        {
-            if (holidays == null)
-                return null;
-            return new HashSet<DateTime>(holidays.Distinct());
-        }
-
         public bool IsHoliday(DateTime day)
         {
-            return Holidays != null && Holidays.Contains(day);
+            return Holidays != null && Holidays.ContainsKey(day);
         }
 
-        public DateTime TestMove(DateTime day)
+        public bool IsMove(DateTime day)
         {
-            if (OverWorkdays == null || OverWorkdaysCache == null)
-                return day;
-
-            if (!OverWorkdaysCache.Contains(day.Date))
-                return day;
-
-            var from = OverWorkdays.Where(x => x.DateTo.Date == day.Date);
-            if (from.Any())
-                return from.First().DateTo;
-
-            var to = OverWorkdays.Where(x => x.DateTo.Date == day.Date);
-            if (to.Any())
-                return to.First().DateTo;
-
-            return day;
+            return OverWorkdays != null && OverWorkdays.ContainsKey(day.Date);
         }
 
+        public DateTime GetMoveDate(DateTime day)
+        {
+            if (!IsMove(day))
+                return day;
+            return OverWorkdays[day.Date];
+        }
         public bool IsSaturSunDay(DateTime day)
         {
             return (day.DayOfWeek == DayOfWeek.Saturday || day.DayOfWeek == DayOfWeek.Sunday);
         }
-
         public bool IsRestday(DateTime day)
         {
-            var d = TestMove(day);
-            return IsSaturSunDay(d);
+            var day1 = GetMoveDate(day);
+            return IsSaturSunDay(day1);
         }
-
         public bool IsPreHoliday(DateTime day)
         {
-            var d = TestMove(day);
-            return IsHoliday(d.AddDays(1));
+            var day1 = GetMoveDate(day);
+            return IsHoliday(day1.AddDays(1));
         }
+
+        public string GetTooltip(DateTime day)
+        {
+            if (Holidays != null && Holidays.ContainsKey(day))
+                return Holidays[day];
+
+            if (OverWorkdays != null && OverWorkdays.ContainsKey(day.Date))
+                return string.Format("перенос: {0:d MMMM}", OverWorkdays[day.Date]);
+
+            return null;
+        }
+
         public string MonthName
         {
             get { return FirstDay.ToString("MMMM"); }
@@ -93,7 +77,7 @@ namespace WebMpt.Model.WorkSchedule
             var day = FirstDay.AddDays(dayNumber-1);
             if (day.Month != FirstDay.Month)
                 return null;
-            return new ScheduleDay(day, IsHoliday(day), IsPreHoliday(day), IsRestday(day));
+            return new ScheduleDay(day, IsHoliday(day), IsPreHoliday(day), IsRestday(day), IsMove(day),  GetTooltip(day));
         }
         
         public IEnumerable<ScheduleDay> Days { get; private set; }
@@ -112,16 +96,14 @@ namespace WebMpt.Model.WorkSchedule
             get { return SmenaMonthPropertieses[smenaName]; }
         }
         
-        public ScheduleMonth(DateTime firstDay, IEnumerable<DateTime> holidays = null, IEnumerable<WorkScheduleMove> overWorkdays = null)
+        public ScheduleMonth(DateTime firstDay, Dictionary<DateTime,string> holidays = null, Dictionary<DateTime, DateTime> overWorkdays = null)
             : this(firstDay.Year, firstDay.Month, holidays, overWorkdays)
         {}
         
-        public ScheduleMonth(int year, int month, IEnumerable<DateTime> holidays = null, IEnumerable<WorkScheduleMove> overWorkdays = null)
+        public ScheduleMonth(int year, int month, Dictionary<DateTime, string> holidays = null, Dictionary<DateTime, DateTime> overWorkdays = null)
         {
             Holidays = holidays;
-            HolidaysCache = GetHolidaysCache(holidays);
             OverWorkdays = overWorkdays;
-            OverWorkdaysCache = GetOverWorkdaysCache(overWorkdays);
             
 
             FirstDay = new DateTime(year, month, 1);

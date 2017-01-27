@@ -44,6 +44,8 @@ namespace WebMpt.Model.WorkSchedule
         public bool IsRestday { get { return Day.IsRestday; } }
         public bool IsHoliday { get { return Day.IsHoliday; } }
         public bool IsPreholyday { get { return Day.IsPreHoliday; } }
+        public bool IsMove { get { return Day.IsMove; } }
+
 
         public ScheduleSmena(ScheduleDay day, uint workHours = 8, bool isNight = false, SmenaName smenaName = SmenaName.Day)
         {
@@ -58,14 +60,18 @@ namespace WebMpt.Model.WorkSchedule
             var l = new List<string>();
             if (Smena != SmenaName.Day)
                 l.Add("Smena");
+            if (IsMove)
+                l.Add("IsMove");
             if (IsRestday)
                 l.Add("IsRestday");
             if (IsHoliday)
-                l.Add("IsHolyday");
+                l.Add("IsHoliday");
             if (IsPreholyday)
                 l.Add("IsPreholyday");
             if (IsNight)
                 l.Add("IsNight");
+
+
             return string.Join(" ", l);
         }
     }
