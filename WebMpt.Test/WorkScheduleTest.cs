@@ -18,48 +18,50 @@ namespace WebMpt.Test.WorkSchedule
         [TestMethod]
         public void TestScheduleDay()
         {
-            var month = new ScheduleMonth(2015, 03, holidays);
-            var day = month.GetScheduleDay(08);
+            var month = new ScheduleMonth(2017, 02, holidays);
+            var day = month.GetScheduleDay(10);
 
-            Assert.AreEqual(day.IsRestday, true);
-            Assert.AreEqual(day.IsHoliday, true);
-            Assert.AreEqual(day.IsPreHoliday, false);
+            Assert.IsFalse(day.IsRestday);
+            Assert.IsFalse(day.IsHoliday);
+            Assert.IsFalse(day.IsPreHoliday);
 
             var smenDay = day[SmenaName.Day];
-            Assert.AreEqual(smenDay.WorkHours, 0);
-            Assert.AreEqual(smenDay.IsNight, false);
+            Assert.AreEqual((int)smenDay.WorkHours, 8);
+            Assert.IsFalse(smenDay.IsNight);
 
             var smenA = day[SmenaName.A];
-            Assert.AreEqual(smenA.WorkHours, 0);
-            Assert.AreEqual(smenA.IsNight, false);
+            Assert.AreEqual((int)smenA.WorkHours, 0);
+            Assert.IsFalse(smenA.IsNight);
 
             var smenaB = day[SmenaName.B];
-            Assert.AreEqual(smenaB.WorkHours, 12);
-            Assert.AreEqual(smenaB.IsNight, true);
+            Assert.AreEqual((int)smenaB.WorkHours, 12);
+            Assert.IsTrue(smenaB.IsNight);
 
             var smenaC = day[SmenaName.V];
-            Assert.AreEqual(smenaC.WorkHours, 12);
-            Assert.AreEqual(smenaC.IsNight, false);
+            Assert.AreEqual((int)smenaC.WorkHours, 12);
+            Assert.IsFalse(smenaC.IsNight);
 
             var smenaD = day[SmenaName.G];
-            Assert.AreEqual(smenaD.WorkHours, 0);
-            Assert.AreEqual(smenaD.IsNight, false);
+            Assert.AreEqual((int)smenaD.WorkHours, 0);
+            Assert.IsFalse(smenaD.IsNight);
         }
 
 
         [TestMethod]
         public void TestPreHoliday()
         {
+            var holidays = new Dictionary<DateTime, string> { { new DateTime(2015, 03, 08), "бабский день" } };
+
             var month = new ScheduleMonth(2015, 03, holidays);
-            var day = new ScheduleDay(2015, 03, 07);
+            var day = month.GetScheduleDay(07);
             
-            Assert.AreEqual(day.IsRestday, true);
-            Assert.AreEqual(day.IsPreHoliday, true);
-            Assert.AreEqual(day.IsHoliday, false);
+            Assert.IsTrue(day.IsRestday);
+            Assert.IsFalse(day.IsHoliday);
+            Assert.IsTrue(day.IsPreHoliday);
 
             var smenDay = day[SmenaName.Day];
-            Assert.AreEqual(smenDay.WorkHours, 0);
-            Assert.AreEqual(smenDay.IsNight, false);
+            Assert.AreEqual((int)smenDay.WorkHours, 0);
+            Assert.IsFalse(smenDay.IsNight);
         }
 
         [TestMethod]
