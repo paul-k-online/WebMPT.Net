@@ -17,45 +17,39 @@
 
 <br/>
 <div><a href="http://192.168.100.220/redmine/projects/100_mpt/wiki/LoadPlcMessagesExcel" target="_blank">Инструкция по подготовке списка сообщений</a> </div>
-
 <br/>
 
 <!-- Modal -->
 <div class="modal fade" id="LoadMessagesModalForm" role="dialog">
     <div class="modal-dialog">
-        <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-header" @* style="padding: 35px 50px; *@>
-                <h4 class="text-center"><span class="glyphicon glyphicon-asterisk"></span> Загрузить сообщения</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+           
+             <div class="modal-header" @* style="padding: 35px 50px; *@>
+                <h2 class="text-center">Загрузить перечень контроллера</h2>
+                @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
             </div>
-            <div class="modal-body" style="padding: 40px 50px;">
-                @using (Html.BeginForm("MessagesUpdate", "Plc", FormMethod.Post, new {@enctype = "multipart/form-data", @id = "LoadForm"}))
-                {
+            @using (Html.BeginForm("MessagesUpdate", "Plc", FormMethod.Post, new { @enctype = "multipart/form-data", @id = "LoadForm" }))
+            {
+                <div class="modal-body" style="padding: 40px 50px;">
                     <fieldset>
                         <legend>Для контроллера "@ViewBag.PlcFullName"</legend>
-
+                        @Html.Hidden("plcId", (int)ViewBag.PlcId)
                         <div class="form-group-sm">
-                            @Html.Hidden("plcId", (int) ViewBag.PlcId)
+                            @Html.Label("excelFile", "Выберите файл \"Перечень позиций\" *.xls или *.xlsx", new { @class = "control-label" })
+                            @Html.TextBox("excelFile", null, new { @type = "file", @class = "form-control", @placeholder = "*.xls | *.xlsx" })
                         </div>
-
-                        <div class="form-group-sm">
-                            @Html.Label("excelFile", "Выберите excelDataBase файл \"Перечень позиций\"", new {@class = "control-label"})
-                            @Html.TextBox("excelFile", null, new {@type = "file", @class = "form-control", @placeholder = "Выберите excelDataBase файл \"Перечень позиций\""})
-                        </div>
-                        <br/>
+                        <br />
                         <div class="form-group-sm form-actions">
-                            <button type="submit" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Загрузить</button>
-                            <button type="button" class="btn btn-default " data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Отмена</button>
                         </div>
                     </fieldset>
-                }
-            </div>
+                </div>
 
-            @*
-            <div class="modal-footer">
-            </div>
-            *@
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Загрузить</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Отмена</button>
+                </div>
+            }
+
         </div>
     </div>
 </div>
