@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Генератор тегов RSView32";
+}
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Generate", "RSViewTagGenerator", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    <fieldset>
+        <legend>Сгенерировать базу тегов RSView32 из перечня позиций</legend>
+
+        <div class="form-group">
+            @Html.Label("excelFile", "Перечень позиций (Excel)", new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBox("excelFile", null, new { @type = "file", @class = "form-control", @placeholder = "*.xls|*.xlsx" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("nodeName", "Узел подключения", new { @class = "col-sm-3 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBox("nodeName", null, new { @class = "form-control", @placeholder = "Node Name" })
+            </div>
+        </div>
+
+        <div class="form-group form-actions">
+            <button type="submit" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Сгенерировать</button>
+            <a href="Plc" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span> Отмена</a>
+        </div>
+    </fieldset>
+}

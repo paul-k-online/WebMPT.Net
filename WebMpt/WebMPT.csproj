@@ -284,6 +284,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -308,6 +309,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PlcController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
+    <Compile Include="Controllers\RSViewTagGeneratorController.cs" />
     <Compile Include="Controllers\WorkScheduleController.cs" />
     <Compile Include="Controllers\WorkstationController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
@@ -362,8 +364,8 @@
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Views\Plc\Events.cshtml" />
-    <Content Include="Views\Plc\RsViewTags.cshtml" />
-    <Content Include="Views\Plc\RsViewTagsGenerate.cshtml" />
+    <Content Include="Views\RSViewTagGenerator\Generate.cshtml" />
+    <Content Include="Views\RSViewTagGenerator\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>

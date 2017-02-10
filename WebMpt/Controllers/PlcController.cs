@@ -149,14 +149,6 @@ namespace WebMpt.Controllers
 
 
         [HttpPost]
-        public ActionResult RsViewTagsGenerate(HttpPostedFileBase excelFile, string nodeName = null)
-        {
-            return View();
-        }
-
-
-
-        [HttpPost]
         public ActionResult MessagesUpdate(HttpPostedFileBase excelFile = null, int? plcId = null)
         {
             if (excelFile == null || excelFile.ContentLength <= 0 || plcId == null) 
