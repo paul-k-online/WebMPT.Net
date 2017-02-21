@@ -4,23 +4,9 @@
     <meta http-equiv="Content-Script-Type" content="text/javascript" />
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <link rel="shortcut icon" href="http://192.168.100.220/img/logo.png" type="image/x-icon" />
-
-
-    <!-- Styles&Scripts Render -->
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("Scripts", required: false)
-
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="http://192.168.100.220/css/style.css" type="text/css" media="screen, projection, tv" />
-    <link rel="stylesheet" href="http://192.168.100.220/css/style-print.css" type="text/css" media="print" />
-    <!-- JavaScript -->
-    @*
-    <script type="text/javascript" src="http://192.168.100.220/js/jquery-1.8.2.min.js"></script>
-    *@
     
+    <!-- JavaScript -->
+    <script type="text/javascript" src="http://192.168.100.220/js/jquery-1.8.2.min.js"></script>
     <script type="text/javascript" src="http://192.168.100.220/js/jquery.scroller.js"></script>
     <script type="text/javascript">
 		$(document).ready(function(){
@@ -34,7 +20,20 @@
 		    $(window).scroller({ img_src: 'http://192.168.100.220/img/scrollup.png', height: 0.5 });
         })
     </script>
+    <!--  -->
 
+    <!-- Dot.Net Styles&Scripts Render -->
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("Scripts", required: false)
+    <!--  -->
+
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="http://192.168.100.220/css/style.css" type="text/css" media="screen, projection, tv" />
+    <link rel="stylesheet" href="http://192.168.100.220/css/style-print.css" type="text/css" media="print" />
+    <!--  -->
 
     <title>@ViewBag.Title | Сектор МПТ</title>
 </head>
@@ -62,7 +61,6 @@
             <h3>Приложения МПТ</h3>
             <ul>
                 <li><a href="http://192.168.100.220/webmpt/rsv.jsp" class="null">&nbsp;RSView32 Tag Creator</a></li>
-                <li><a href="http://192.168.100.220/eventlog/calendar.php?y=2016&showmenu=on">&nbsp;График работы 2016</a></li>
                 <li><a href="http://192.168.100.220/eventlog/calendar.php?y=2017&showmenu=on">&nbsp;График работы 2017</a></li>
                 <li><a href="http://192.168.100.220/eventlog/plc.php?showmenu=on">&nbsp;Протокол событий</a></li>
                 <li><a href="http://192.168.100.220/eventlog/tag.php?showmenu=on">&nbsp;Теги RSView</a></li>
@@ -104,11 +102,17 @@
             <p><span>E-mail: </span><a href="mailto:mpt@polymir.by">mpt@polymir.by</a></p>
         </div>
 
-
         <!-- Content right -->
         <div id="content-box-right">
 
-            @* {xxxBODYxxx} *@
+
+            <!-- PHP Content -->           
+            <!--
+            {xxxBODYxxx}
+            -->
+            <!-- -->
+
+            <!-- DOT.NET Content -->
             <div class="content-wrapper">
                 <div class="float-left">
                     <p class="site-title">@ViewBag.LeftContent</p>
@@ -123,9 +127,7 @@
                     @RenderBody()
                 </section>
             </div>
-
-
-            @* {xxxBODYxxx} *@
+            <!-- -->
 
 
         </div>

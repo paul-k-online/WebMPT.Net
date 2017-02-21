@@ -30,32 +30,27 @@ namespace WebMpt.Controllers
                 return RedirectToAction("Index");
 
             var path = Path.GetTempFileName();
+            ViewBag.ErrorMessage = path + Environment.NewLine;
             try
             {
-                ViewBag.ErrorMessage = "";
+                
                 excelFile.SaveAs(path);
                 var posList = new ExcelPositionList(path);
                 if (!posList.LoadAiSheet())
-                {
-                    ViewBag.ErrorMessage += "Ошибка загрузки страницы AI из Excel\n";
-                }
+                    ViewBag.ErrorMessage += "Ошибка загрузки страницы AI из Excel\n" + Environment.NewLine;
 
                 if (!posList.LoadAoSheet())
-                {
-                    ViewBag.ErrorMessage += "Ошибка загрузки страницы AO из Excel\n";
-                }
+                    ViewBag.ErrorMessage += "Ошибка загрузки страницы AO из Excel\n" + Environment.NewLine;
 
                 if (!posList.LoadDioSheet())
-                {
-                    ViewBag.ErrorMessage += "Ошибка загрузки страницы DIO из Excel\n";
-                }
+                    ViewBag.ErrorMessage += "Ошибка загрузки страницы DIO из Excel\n" + Environment.NewLine;
 
                 var binDirectoryPath = Server.MapPath("~/bin");
                 var p = AppDomain.CurrentDomain.BaseDirectory;
                 var shemaFilePath = Path.Combine(binDirectoryPath, @"RSView\ImportExport\POSITIONLIST.xml");
                 var shema = XElement.Load(shemaFilePath);
                 var converter = new RSViewPositionListConverter(posList, shema, nodeName);
-                var csvGenerator = new CsvGenerator(converter.ConvertAiPositionsToRsViewTags(), nodeName);
+                var csvGenerator = new CsvGenerator(converter.ConvertAllPositionsToRsViewTags(), nodeName);
 
                 var fileData = csvGenerator.GetZipStream().ToArray();
                 var fileName = csvGenerator.ZipFileName;
